@@ -16,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.schedule.manager.infrastructure.base.dictionary.administered.AdministeredDictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.AdministeredDictionaryType;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.SimpleDictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
-import ru.schedule.manager.infrastructure.base.serializer.BaseDictionarySerializer;
 
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 

@@ -5,15 +5,15 @@ import MainScreen from '../views/MainScreen.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'main',
-    component: MainScreen
-  },
+	{
+		path: '/',
+		name: 'main',
+		component: MainScreen
+	},
 ]
 
 const router = new VueRouter({
-  routes
+	routes
 })
 
 export default router

@@ -11,8 +11,8 @@ public class BaseDictionarySerializer extends JsonSerializer<SimpleDictionary> {
 
 	@Override
 	public void serialize(final SimpleDictionary value,
-						  final JsonGenerator gen,
-						  final SerializerProvider serializers) throws IOException {
+	                      final JsonGenerator gen,
+	                      final SerializerProvider serializers) throws IOException {
 		gen.writeStartObject();
 		gen.writeStringField("key", value.getDictionaryKey());
 		gen.writeStringField("value", value.getDictionaryValue());

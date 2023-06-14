@@ -11,8 +11,8 @@ public class BaseEntitySerializer extends JsonSerializer<BaseEntity> {
 
 	@Override
 	public void serialize(final BaseEntity value,
-						  final JsonGenerator gen,
-						  final SerializerProvider serializers) throws IOException {
+	                      final JsonGenerator gen,
+	                      final SerializerProvider serializers) throws IOException {
 		gen.writeStartObject();
 		gen.writeNumberField("id", value.getId());
 		gen.writeEndObject();

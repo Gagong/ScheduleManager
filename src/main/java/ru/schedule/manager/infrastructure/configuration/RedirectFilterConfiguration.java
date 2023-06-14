@@ -36,8 +36,8 @@ public class RedirectFilterConfiguration {
 			@SuppressWarnings("NullableProblems")
 			@Override
 			protected void doFilterInternal(final HttpServletRequest req,
-											final HttpServletResponse res,
-											final FilterChain chain) throws ServletException, IOException {
+			                                final HttpServletResponse res,
+			                                final FilterChain chain) throws ServletException, IOException {
 				if (DEFAULT_API_REQUEST_PATTERN.matcher(req.getRequestURI()).matches() && !req.getRequestURI().equals("/")) {
 					log.info("URL {} entered directly into the Browser, redirecting...", req.getRequestURI());
 					req.getRequestDispatcher("/").forward(req, res);
