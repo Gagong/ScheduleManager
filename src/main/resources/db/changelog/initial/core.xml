@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+        logicalFilePath="db/changelog/initial/core.xml">
+
+    <changeSet id="CREATE DICTIONARY TABLE" author="sm">
+        <createTable tableName="dictionary">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--Custom fields-->
+            <column name="DICTIONARY_TYPE" remarks="Тип справочника" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DICTIONARY_KEY" remarks="Ключ справочника" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DICTIONARY_VALUE" remarks="Значение справочника" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--FK fields-->
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

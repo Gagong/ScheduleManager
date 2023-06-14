@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+        logicalFilePath="db/changelog/initial/sequences.xml">
+
+    <changeSet id="EXT_HIBERNATE_SEQUENCE" author="sm">
+        <createSequence maxValue="9223372036854775807" sequenceName="EXT_HIBERNATE_SEQUENCE" startValue="10000" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="HIBERNATE_SEQUENCE" author="sm">
+        <createSequence maxValue="9223372036854775807" sequenceName="HIBERNATE_SEQUENCE" startValue="10000" incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

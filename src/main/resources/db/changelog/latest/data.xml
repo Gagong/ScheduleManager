@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
+        logicalFilePath="db/changelog/initial/sequences.xml">
+
+    <changeSet id="LOAD DICTIONARIES" author="sm">
+        <loadUpdateData tableName="DICTIONARY" primaryKey="ID" separator=";" file="db/changelog/latest/data/DICTIONARY.csv">
+            <column header="ID" name="ID" type="NUMERIC"/>
+            <column header="DICTIONARY_TYPE" name="DICTIONARY_TYPE" type="STRING"/>
+            <column header="DICTIONARY_KEY" name="DICTIONARY_KEY" type="STRING"/>
+            <column header="DICTIONARY_VALUE" name="DICTIONARY_VALUE" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
+
+</databaseChangeLog>

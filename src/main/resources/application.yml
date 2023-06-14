@@ -1,0 +1,83 @@
+app:
+  ui-path: /ui
+
+server:
+  forward-headers-strategy: framework
+  servlet:
+    session.cookie.http-only: true
+    encoding: #Возможность для logbook-а вывода в лог русских символов
+      charset: UTF-8
+      force-response: true
+  port: ${SERVER_PORT:8098}
+
+spring:
+  mvc:
+    log-request-details: true
+    log-resolved-exception: true
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: ${APPLICATION_NAME:SM}
+  datasource:
+    name: primaryDS
+    driver-class-name: ${DATABASE_DRIVER}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_JAVA_USER}
+    password: ${DATABASE_JAVA_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DATABASE_MAX_POOL_SIZE:200}
+      max-lifetime: 590000 # Время жизни соединения - 9 мин 50 сек (на случай если железо рвет соединения больше 10 мин)
+      keep-alive-time: 30000 # Каждые 30 секунд (30000 мс) проверим на живость простаивающие соединения
+      idle-timeout: 600000 # Время простоя соединения в пуле подключений (должно быть меньше max-lifetime)
+      validation-timeout: 5000 # Максимальное время, в течение которого соединение будет проверяться на активность
+      leak-detection-threshold: 120000 # Свойство определяет время, в течение которого соединение может находиться вне пула,
+      connection-timeout: 120000       # прежде чем будет зарегистрировано сообщение о возможной утечке соединения
+      minimum-idle: 5
+      connection-test-query: SELECT 1
+      schema: ${DATABASE_SCHEMA}
+  liquibase:
+    change-log: classpath:/db/changelog/master.xml
+    enabled: ${LIQUIBASE_ENABLED:true}
+    drop-first: ${LIQUIBASE_DROP_FIRST:false}
+    contexts: ${LIQUIBASE_CONTEXT:SBS}
+    user: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    parameters:
+      grantee: ${DATABASE_JAVA_USER}
+    driver-class-name: ${DATABASE_DRIVER}
+    url: ${DATABASE_URL}
+  cache:
+    type: None
+  jpa:
+    properties:
+      hibernate:
+        synonyms: true
+        default-batch-fetch-size: 100
+        order-updates: true
+        order-inserts: true
+        batch-versioned-data: true
+        batch-fetch-style: DYNAMIC
+        criteria.literal-handling-mode: BIND
+        connection:
+          include-synonyms: true
+          char-set: UTF-8
+        jdbc.batch-size: 100
+        dialect: ${DATABASE_DIALECT}
+        default_schema: ${DATABASE_SCHEMA}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env, beans, configprops, mappings, health
+  endpoint.health.probes.enabled: true
+
+logging:
+  level:
+    web: DEBUG
+    org.zalando.logbook: TRACE # В Logbook для логирования используется log.trace()
+    # Дополнительное логирование SQL
+    # org.hibernate.SQL: DEBUG
+    # org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    # com.zaxxer.hikari.HikariConfig: DEBUG
+    # com.zaxxer.hikari: TRACE
