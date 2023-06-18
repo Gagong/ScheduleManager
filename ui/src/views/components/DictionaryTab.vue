@@ -117,14 +117,14 @@ export default {
 			{{ dictionary.value }}
 		</v-card-title>
 		<v-card-text>
-			<v-row>
+			<v-scheduleRowDataHolder>
 				<v-col cols="12">
 					<h4>Добавить новое значение</h4>
 				</v-col>
-			</v-row>
-			<v-row>
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder>
 				<v-col cols="12">
-					<v-row>
+					<v-scheduleRowDataHolder>
 						<v-col cols="4">
 							<v-text-field
 									v-model="key"
@@ -152,17 +152,17 @@ export default {
 						<v-col cols="2">
 							<v-btn block color="#2edb5c" @click="this.addNewDictionaryValue">Добавить</v-btn>
 						</v-col>
-					</v-row>
+					</v-scheduleRowDataHolder>
 				</v-col>
-			</v-row>
-			<v-row>
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder>
 				<v-col cols="12">
 					<h4>Изменить значение</h4>
 				</v-col>
-			</v-row>
-			<v-row>
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder>
 				<v-col cols="12">
-					<v-row>
+					<v-scheduleRowDataHolder>
 						<v-col cols="4">
 							<v-text-field
 									v-model="selectedDto.key"
@@ -192,15 +192,15 @@ export default {
 						<v-col cols="2">
 							<v-btn :disabled="blocked" block color="#ffd000" @click="this.updateDictionaryValue">Изменить</v-btn>
 						</v-col>
-					</v-row>
+					</v-scheduleRowDataHolder>
 				</v-col>
-			</v-row>
-			<v-row>
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder>
 				<v-col cols="12">
 					<v-text-field v-model="search" append-icon="mdi-magnify" hide-details label="Поиск" single-line/>
 				</v-col>
-			</v-row>
-			<v-row>
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder>
 				<v-col cols="12">
 					<v-data-table
 							:headers="headers"
@@ -210,9 +210,9 @@ export default {
 							class="elevation-1"
 							item-key="id"
 							no-data-text="Данные отсутствуют"
-							@dblclick:row="updateValue"/>
+							@dblclick:scheduleRowDataHolder="updateValue"/>
 				</v-col>
-			</v-row>
+			</v-scheduleRowDataHolder>
 		</v-card-text>
 	</v-card>
 </template>

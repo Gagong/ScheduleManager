@@ -1,6 +1,6 @@
 <script>
 
-import {DICTIONARY_API} from "@/axios/axios";
+import {DICTIONARY_API, PROFESSOR_DISCIPLINE_API} from "@/axios/axios";
 
 export default {
 	name: 'ProfessorDiscipline',
@@ -46,7 +46,7 @@ export default {
 	}),
 	methods: {
 		addLnk() {
-			DICTIONARY_API.post('addProfessorDiscipline', {
+			PROFESSOR_DISCIPLINE_API.post('addProfessorDiscipline', {
 				professor: this.professor,
 				disciplines: this.disciplines
 			}).then(resp => {
@@ -59,7 +59,7 @@ export default {
 			})
 		},
 		fetchProfessorDisciplines(professor) {
-			DICTIONARY_API.post('getProfessorDisciplines', professor).then(resp => {
+			PROFESSOR_DISCIPLINE_API.post('getProfessorDisciplines', professor).then(resp => {
 				console.log(resp)
 				this.items = resp.data
 			}).catch(e => {
@@ -108,7 +108,7 @@ export default {
 			Связь "Преподаватель - Дисциплина"
 		</v-card-title>
 		<v-card-text>
-			<v-row>
+			<v-scheduleRowDataHolder>
 				<v-col cols="4">
 					<v-autocomplete
 							v-model="professor"
@@ -141,13 +141,13 @@ export default {
 				<v-col cols="2">
 					<v-btn block color="#2edb5c" @click="addLnk">Добавить связь</v-btn>
 				</v-col>
-			</v-row>
-			<v-row v-if="professor !== null && professor !== undefined">
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder v-if="professor !== null && professor !== undefined">
 				<v-col cols="12">
 					<v-text-field v-model="search" append-icon="mdi-magnify" hide-details label="Поиск" single-line/>
 				</v-col>
-			</v-row>
-			<v-row v-if="professor !== null && professor !== undefined">
+			</v-scheduleRowDataHolder>
+			<v-scheduleRowDataHolder v-if="professor !== null && professor !== undefined">
 				<v-col cols="12">
 					<v-data-table
 							:headers="headers"
@@ -158,7 +158,7 @@ export default {
 							item-key="id"
 							no-data-text="Данные отсутствуют"/>
 				</v-col>
-			</v-row>
+			</v-scheduleRowDataHolder>
 		</v-card-text>
 	</v-card>
 </template>

@@ -20,3 +20,10 @@ export const SCHEDULE_API = axios.create({
 		'Access-Control-Allow-Origin': 'http://localhost:8080'
 	}
 })
+
+export const PROFESSOR_DISCIPLINE_API = axios.create({
+	baseURL: `http://localhost:8081/api/professorDiscipline`,
+	headers: {
+		'Access-Control-Allow-Origin': 'http://localhost:8080'
+	}
+})

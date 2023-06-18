@@ -3,8 +3,6 @@ package ru.schedule.manager.business.controller;
 import java.util.LinkedList;
 import java.util.List;
 
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.schedule.manager.business.dataholder.ScheduleColDataHolder;
+import ru.schedule.manager.business.dataholder.ScheduleRowDataHolder;
 import ru.schedule.manager.business.dto.ScheduleItemDto;
 
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
@@ -23,10 +23,10 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 public class ScheduleController {
 
 	@GetMapping("getDefaultItems")
-	public List<Row> getDefaultItems() {
-		final List<Row> rows = new LinkedList<>();
+	public List<ScheduleRowDataHolder> getDefaultItems() {
+		final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
 		for (int r = 0; r < 2; r++) {
-			final Row row = new Row(new LinkedList<>());
+			final ScheduleRowDataHolder scheduleRowDataHolder = new ScheduleRowDataHolder(new LinkedList<>());
 			for (int c = 0; c < 6; c++) {
 				final List<ScheduleItemDto> list = new LinkedList<>();
 				for (int i = 0; i < 7; i++) {
@@ -38,27 +38,11 @@ public class ScheduleController {
 							.build()
 					);
 				}
-				row.getCols().add(new Col(list));
+				scheduleRowDataHolder.getCols().add(new ScheduleColDataHolder(list));
 			}
-			rows.add(row);
+			scheduleRowDataHolders.add(scheduleRowDataHolder);
 		}
-		return rows;
-	}
-
-	@Data
-	private static class Row {
-
-		@Builder.Default
-		private final List<Col> cols;
-
-	}
-
-	@Data
-	private static class Col {
-
-		@Builder.Default
-		private final List<ScheduleItemDto> items;
-
+		return scheduleRowDataHolders;
 	}
 
 }
