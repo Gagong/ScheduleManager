@@ -9,6 +9,8 @@ server:
       charset: UTF-8
       force-response: true
   port: ${SERVER_PORT:8098}
+  tomcat:
+    relaxed-query-chars: '|,{,},[,]'
 
 spring:
   mvc:

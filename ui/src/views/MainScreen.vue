@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container fluid>
 		<v-row>
 			<v-toolbar dense flat>
 				<v-toolbar-title>Менеджер расписания</v-toolbar-title>
@@ -26,7 +26,9 @@
 									<v-toolbar-items>
 										<v-tabs v-model="dictionaryTab" vertical>
 											<v-tabs-slider color="#283593"/>
-											<v-tab v-for="dictionary in dictionaries" :key="dictionary.key" class="left-tab">{{ dictionary.value }}
+											<v-tab v-for="dictionary in dictionaries" :key="dictionary.key" class="left-tab">{{
+													dictionary.value
+												}}
 											</v-tab>
 										</v-tabs>
 									</v-toolbar-items>
@@ -51,7 +53,7 @@
 					</v-tab-item>
 					<!--Составление расписания-->
 					<v-tab-item>
-
+						<CreateSchedule/>
 					</v-tab-item>
 				</v-tabs-items>
 			</v-col>
@@ -69,10 +71,12 @@
 import {DICTIONARY_API} from "@/axios/axios";
 import DictionaryTab from "@/views/components/DictionaryTab.vue";
 import ProfessorDiscipline from "@/views/components/ProfessorDiscipline.vue";
+import CreateSchedule from "@/views/components/CreateSchedule.vue";
 
 export default {
 	name: 'MainScreen',
 	components: {
+		CreateSchedule,
 		ProfessorDiscipline,
 		DictionaryTab
 	},

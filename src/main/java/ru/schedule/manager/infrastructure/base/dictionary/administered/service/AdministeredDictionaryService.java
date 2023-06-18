@@ -26,10 +26,6 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 
 	private static final String NULL_ARGUMENTS_ERROR = "Отсутствуют значения для поиска справочника";
 
-	private static final String UNSUPPORTED_CREATE_ALREADY_EXISTS_DICTIONARY_VALUES_ERROR = "Данная операция не поддерживает обновление существующих записей";
-
-	private static final String UNSUPPORTED_UPDATE_ALREADY_EXISTS_VALUES_ERROR = "Данные по указанным значениям уже существуют %s";
-
 	private final DictionaryRepository dictionaryRepository;
 
 	public AdministeredDictionaryService(final DictionaryRepository dictionaryRepository) {

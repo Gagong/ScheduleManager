@@ -9,8 +9,65 @@ export default {
 		professors: [],
 		discipline: [],
 		disciplines: [],
+		search: null,
+		headers: [
+			{
+				text: 'ID',
+				align: 'center',
+				sortable: true,
+				value: 'id'
+			},
+			{
+				text: 'Преподаватель',
+				align: 'center',
+				sortable: true,
+				value: 'professor.value'
+			},
+			{
+				text: 'Дисциплина',
+				align: 'center',
+				sortable: true,
+				value: 'discipline.value'
+			},
+			{
+				text: 'Создано',
+				align: 'center',
+				sortable: true,
+				value: 'createdDateTime'
+			},
+			{
+				text: 'Изменено',
+				align: 'center',
+				sortable: true,
+				value: 'updateDateTime'
+			},
+		],
+		items: [],
 	}),
-	methods: {},
+	methods: {
+		addLnk() {
+			DICTIONARY_API.post('addProfessorDiscipline', {
+				professor: this.professor,
+				disciplines: this.disciplines
+			}).then(resp => {
+				console.log(resp)
+				this.fetchProfessorDisciplines(this.professor)
+				this.disciplines = []
+			}).catch(e => {
+				console.log(e)
+				alert(e.response.data.message)
+			})
+		},
+		fetchProfessorDisciplines(professor) {
+			DICTIONARY_API.post('getProfessorDisciplines', professor).then(resp => {
+				console.log(resp)
+				this.items = resp.data
+			}).catch(e => {
+				console.log(e)
+				alert(e.response.data.message)
+			})
+		}
+	},
 	mounted() {
 		DICTIONARY_API.get('getAllByType', {
 			params: {
@@ -35,11 +92,18 @@ export default {
 			alert(e.response.data.message)
 		})
 	},
+	watch: {
+		professor(item) {
+			if (item) {
+				this.fetchProfessorDisciplines(item)
+			}
+		}
+	}
 }
 </script>
 
 <template>
-	<v-card height="1000">
+	<v-card>
 		<v-card-title>
 			Связь "Преподаватель - Дисциплина"
 		</v-card-title>
@@ -55,6 +119,7 @@ export default {
 							item-text="value"
 							item-value="id"
 							label="Выберите Преподавателя"
+							no-data-text="Нет данных"
 							outlined
 							return-object/>
 				</v-col>
@@ -68,21 +133,36 @@ export default {
 							item-text="value"
 							item-value="id"
 							label="Выберите Дисциплину"
+							no-data-text="Нет данных"
 							multiple
 							outlined
 							return-object/>
 				</v-col>
 				<v-col cols="2">
-					<v-btn block color="#2edb5c">Добавить связь</v-btn>
+					<v-btn block color="#2edb5c" @click="addLnk">Добавить связь</v-btn>
 				</v-col>
 			</v-row>
-			<v-row>
-
+			<v-row v-if="professor !== null && professor !== undefined">
+				<v-col cols="12">
+					<v-text-field v-model="search" append-icon="mdi-magnify" hide-details label="Поиск" single-line/>
+				</v-col>
+			</v-row>
+			<v-row v-if="professor !== null && professor !== undefined">
+				<v-col cols="12">
+					<v-data-table
+							:headers="headers"
+							:items="items"
+							:items-per-page="10"
+							:search="search"
+							class="elevation-1"
+							item-key="id"
+							no-data-text="Данные отсутствуют"/>
+				</v-col>
 			</v-row>
 		</v-card-text>
 	</v-card>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 </style>

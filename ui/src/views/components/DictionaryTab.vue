@@ -202,8 +202,15 @@ export default {
 			</v-row>
 			<v-row>
 				<v-col cols="12">
-					<v-data-table :headers="headers" :items="items" :items-per-page="10" :search="search" class="elevation-1" item-key="id"
-					              no-data-text="Данные отсутствуют" show-select @dblclick:row="updateValue"/>
+					<v-data-table
+							:headers="headers"
+							:items="items"
+							:items-per-page="10"
+							:search="search"
+							class="elevation-1"
+							item-key="id"
+							no-data-text="Данные отсутствуют"
+							@dblclick:row="updateValue"/>
 				</v-col>
 			</v-row>
 		</v-card-text>

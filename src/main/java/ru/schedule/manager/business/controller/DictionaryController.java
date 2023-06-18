@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.schedule.manager.business.dto.ProfessorDisciplineLnkDto;
+import ru.schedule.manager.business.service.ProfessorDisciplineService;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.AdministeredDictionaryType;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.SimpleDictionary;
@@ -23,12 +27,15 @@ import ru.schedule.manager.infrastructure.base.dictionary.administered.service.A
 
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 
+@Slf4j
 @RestController
-@RequestMapping(DEFAULT_API_PATH + "dictionary")
 @RequiredArgsConstructor
+@RequestMapping(DEFAULT_API_PATH + "dictionary")
 public class DictionaryController {
 
 	private final AdministeredDictionaryService administeredDictionaryService;
+
+	private final ProfessorDisciplineService professorDisciplineService;
 
 	@DeleteMapping("delete")
 	public void delete(@RequestBody final DictionaryDto dto) {
@@ -75,6 +82,27 @@ public class DictionaryController {
 		return Arrays.stream(AdministeredDictionaryType.values())
 			.map(type -> new SimpleDictionary(type.getDictionaryKey(), type.getDictionaryValue()))
 			.collect(Collectors.toList());
+	}
+
+	@PostMapping("getProfessorDisciplines")
+	public List<ProfessorDisciplineLnkDto> getProfessorDisciplines(@RequestBody final DictionaryDto professor) {
+		return professorDisciplineService.getProfessorDisciplines(professor);
+	}
+
+	@PostMapping("addProfessorDiscipline")
+	public void addProfessorDiscipline(@RequestBody final ProfessorDisciplineDataHolder data) {
+		data.getDisciplines().stream()
+			.map(discipline -> ProfessorDisciplineLnkDto.builder().professor(data.getProfessor()).discipline(discipline).build())
+			.forEach(professorDisciplineService::create);
+	}
+
+	@Data
+	private static class ProfessorDisciplineDataHolder {
+
+		private List<DictionaryDto> disciplines;
+
+		private DictionaryDto professor;
+
 	}
 
 }
