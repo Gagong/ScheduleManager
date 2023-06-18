@@ -22,6 +22,8 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 @RequestMapping(DEFAULT_API_PATH + "schedule")
 public class ScheduleController {
 
+	//Not a good way, but its works ;)
+	//TODO add entity and DB selector
 	@GetMapping("getDefaultItems")
 	public List<ScheduleRowDataHolder> getDefaultItems() {
 		final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
