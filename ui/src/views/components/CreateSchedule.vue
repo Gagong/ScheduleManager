@@ -58,7 +58,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -67,7 +67,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -76,7 +76,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -85,7 +85,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -94,7 +94,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -103,7 +103,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -112,7 +112,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -123,7 +123,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -132,7 +132,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -141,7 +141,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -150,7 +150,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -159,7 +159,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -168,7 +168,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -177,7 +177,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -188,7 +188,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -197,7 +197,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -206,7 +206,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -215,7 +215,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -224,7 +224,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -233,7 +233,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -242,7 +242,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -253,7 +253,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -262,7 +262,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -271,7 +271,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -280,7 +280,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -289,7 +289,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -298,7 +298,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -307,7 +307,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -318,7 +318,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -327,7 +327,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -336,7 +336,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -345,7 +345,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -354,7 +354,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -363,7 +363,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -372,7 +372,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -383,7 +383,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -392,7 +392,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -401,7 +401,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -410,7 +410,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -419,7 +419,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -428,7 +428,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -437,7 +437,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 1,
+						row: 1,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -450,7 +450,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -459,7 +459,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -468,7 +468,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -477,7 +477,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -486,7 +486,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -495,7 +495,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -504,7 +504,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 1,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -515,7 +515,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -524,7 +524,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -533,7 +533,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -542,7 +542,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -551,7 +551,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -560,7 +560,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -569,7 +569,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 2,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -580,7 +580,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -589,7 +589,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -598,7 +598,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -607,7 +607,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -616,7 +616,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -625,7 +625,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -634,7 +634,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 3,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -645,7 +645,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -654,7 +654,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -663,7 +663,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -672,7 +672,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -681,7 +681,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -690,7 +690,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -699,7 +699,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 4,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -710,7 +710,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -719,7 +719,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -728,7 +728,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -737,7 +737,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -746,7 +746,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -755,7 +755,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -764,7 +764,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 5,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -775,7 +775,7 @@ export default {
 				[
 					{
 						id: 1,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -784,7 +784,7 @@ export default {
 					},
 					{
 						id: 2,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -793,7 +793,7 @@ export default {
 					},
 					{
 						id: 3,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -802,7 +802,7 @@ export default {
 					},
 					{
 						id: 4,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -811,7 +811,7 @@ export default {
 					},
 					{
 						id: 5,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -820,7 +820,7 @@ export default {
 					},
 					{
 						id: 6,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -829,7 +829,7 @@ export default {
 					},
 					{
 						id: 7,
-						scheduleRowDataHolder: 2,
+						row: 2,
 						col: 6,
 						value: "Нажмите для заполнения",
 						classroom: null,
@@ -873,7 +873,7 @@ export default {
 		dialog: false,
 		selectedItem: {
 			id: null,
-			scheduleRowDataHolder: null,
+			row: null,
 			col: null,
 			value: null,
 			classroom: null,
@@ -910,13 +910,13 @@ export default {
 			this.selectedItem.professor = this.selectedProfessor
 			this.selectedItem.discipline = this.selectedDiscipline
 			this.selectedItem.value = this.selectedClassroom.value + ', ' + this.selectedProfessor.value + ', ' + this.selectedDiscipline.value
-			for (let scheduleRowDataHolder in this.items) {
-				for (let col in this.items[scheduleRowDataHolder]) {
-					for (let item in this.items[scheduleRowDataHolder][col]) {
-						let value = this.items[scheduleRowDataHolder][col][item]
-						if (value.scheduleRowDataHolder === this.selectedItem.scheduleRowDataHolder && value.col === this.selectedItem.col && value.id === this.selectedItem.id) {
-							console.log(this.items[scheduleRowDataHolder][col][item])
-							this.items[scheduleRowDataHolder][col][item] = this.selectedItem
+			for (let row in this.items) {
+				for (let col in this.items[row]) {
+					for (let item in this.items[row][col]) {
+						let value = this.items[row][col][item]
+						if (value.row === this.selectedItem.row && value.col === this.selectedItem.col && value.id === this.selectedItem.id) {
+							console.log(this.items[row][col][item])
+							this.items[row][col][item] = this.selectedItem
 						}
 					}
 				}
@@ -980,7 +980,7 @@ export default {
 			<v-card>
 				<v-card-title>Заполните информацию</v-card-title>
 				<v-card-text v-if="items.length > 0">
-					<v-scheduleRowDataHolder>
+					<v-row>
 						<v-col cols="12">
 							<v-autocomplete
 									v-model="selectedClassroom"
@@ -996,8 +996,8 @@ export default {
 									outlined
 									return-object/>
 						</v-col>
-					</v-scheduleRowDataHolder>
-					<v-scheduleRowDataHolder>
+					</v-row>
+					<v-row>
 						<v-col cols="12">
 							<v-autocomplete
 									v-model="selectedProfessor"
@@ -1013,8 +1013,8 @@ export default {
 									outlined
 									return-object/>
 						</v-col>
-					</v-scheduleRowDataHolder>
-					<v-scheduleRowDataHolder>
+					</v-row>
+					<v-row>
 						<v-col cols="12">
 							<v-autocomplete
 									v-model="selectedDiscipline"
@@ -1030,8 +1030,8 @@ export default {
 									outlined
 									return-object/>
 						</v-col>
-					</v-scheduleRowDataHolder>
-					<v-scheduleRowDataHolder>
+					</v-row>
+					<v-row>
 						<v-col cols="4">
 							<v-btn block color="info" @click="rollback">Отмена</v-btn>
 						</v-col>
@@ -1039,7 +1039,7 @@ export default {
 						<v-col cols="4">
 							<v-btn block color="success" @click="fillItem">Сохранить</v-btn>
 						</v-col>
-					</v-scheduleRowDataHolder>
+					</v-row>
 				</v-card-text>
 			</v-card>
 		</v-dialog>
@@ -1048,9 +1048,9 @@ export default {
 			<br/>
 			<h3 style="text-align: center">Первая неделя</h3>
 			<br/>
-			<v-scheduleRowDataHolder>
+			<v-row>
 				<v-col cols="1">
-					<v-scheduleRowDataHolder>
+					<v-row>
 						<v-col cols="12">
 							<v-data-table
 									:headers="time"
@@ -1062,10 +1062,10 @@ export default {
 									no-data-text="Данные отсутствуют"
 							/>
 						</v-col>
-					</v-scheduleRowDataHolder>
+					</v-row>
 				</v-col>
 				<v-col cols="11">
-					<v-scheduleRowDataHolder>
+					<v-row>
 						<v-col cols="2">
 							<v-data-table
 									:headers="monday"
@@ -1075,7 +1075,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1087,7 +1087,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1099,7 +1099,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1111,7 +1111,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1123,7 +1123,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1135,18 +1135,18 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
-					</v-scheduleRowDataHolder>
+					</v-row>
 				</v-col>
-			</v-scheduleRowDataHolder>
+			</v-row>
 			<br/>
 			<h3 style="text-align: center">Вторая неделя</h3>
 			<br/>
-			<v-scheduleRowDataHolder>
+			<v-row>
 				<v-col cols="1">
-					<v-scheduleRowDataHolder>
+					<v-row>
 						<v-col cols="12">
 							<v-data-table
 									:headers="time"
@@ -1158,10 +1158,10 @@ export default {
 									no-data-text="Данные отсутствуют"
 							/>
 						</v-col>
-					</v-scheduleRowDataHolder>
+					</v-row>
 				</v-col>
 				<v-col cols="11">
-					<v-scheduleRowDataHolder>
+					<v-row>
 						<v-col cols="2">
 							<v-data-table
 									:headers="monday"
@@ -1171,7 +1171,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1183,7 +1183,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1195,7 +1195,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1207,7 +1207,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1219,7 +1219,7 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
 						<v-col cols="2">
@@ -1231,19 +1231,19 @@ export default {
 									hide-default-footer
 									item-key="id"
 									no-data-text="Данные отсутствуют"
-									@dblclick:scheduleRowDataHolder="openCard"
+									@dblclick:row="openCard"
 							/>
 						</v-col>
-					</v-scheduleRowDataHolder>
+					</v-row>
 				</v-col>
-			</v-scheduleRowDataHolder>
-			<v-scheduleRowDataHolder>
+			</v-row>
+			<v-row>
 				<v-col cols="5"/>
 				<v-col cols="2">
 					<v-btn block color="success">Сохранить</v-btn>
 				</v-col>
 				<v-col cols="5"/>
-			</v-scheduleRowDataHolder>
+			</v-row>
 		</v-card-text>
 	</v-card>
 </template>

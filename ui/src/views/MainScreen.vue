@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid>
-		<v-scheduleRowDataHolder>
+		<v-row>
 			<v-toolbar dense flat>
 				<v-toolbar-title>Менеджер расписания</v-toolbar-title>
 				<v-spacer/>
@@ -14,13 +14,13 @@
 					</v-tabs>
 				</v-toolbar-items>
 			</v-toolbar>
-		</v-scheduleRowDataHolder>
-		<v-scheduleRowDataHolder>
+		</v-row>
+		<v-row>
 			<v-col cols="12">
 				<v-tabs-items v-model="tab">
 					<!--Справочники-->
 					<v-tab-item>
-						<v-scheduleRowDataHolder>
+						<v-row>
 							<v-col cols="2">
 								<v-toolbar flat>
 									<v-toolbar-items>
@@ -41,7 +41,7 @@
 									</v-tab-item>
 								</v-tabs-items>
 							</v-col>
-						</v-scheduleRowDataHolder>
+						</v-row>
 					</v-tab-item>
 					<!--Преподаватель-Дисциплина-->
 					<v-tab-item>
@@ -57,7 +57,7 @@
 					</v-tab-item>
 				</v-tabs-items>
 			</v-col>
-		</v-scheduleRowDataHolder>
+		</v-row>
 	</v-container>
 </template>
 

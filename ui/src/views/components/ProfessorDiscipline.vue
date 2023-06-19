@@ -108,7 +108,7 @@ export default {
 			Связь "Преподаватель - Дисциплина"
 		</v-card-title>
 		<v-card-text>
-			<v-scheduleRowDataHolder>
+			<v-row>
 				<v-col cols="4">
 					<v-autocomplete
 							v-model="professor"
@@ -141,13 +141,13 @@ export default {
 				<v-col cols="2">
 					<v-btn block color="#2edb5c" @click="addLnk">Добавить связь</v-btn>
 				</v-col>
-			</v-scheduleRowDataHolder>
-			<v-scheduleRowDataHolder v-if="professor !== null && professor !== undefined">
+			</v-row>
+			<v-row v-if="professor !== null && professor !== undefined">
 				<v-col cols="12">
 					<v-text-field v-model="search" append-icon="mdi-magnify" hide-details label="Поиск" single-line/>
 				</v-col>
-			</v-scheduleRowDataHolder>
-			<v-scheduleRowDataHolder v-if="professor !== null && professor !== undefined">
+			</v-row>
+			<v-row v-if="professor !== null && professor !== undefined">
 				<v-col cols="12">
 					<v-data-table
 							:headers="headers"
@@ -158,7 +158,7 @@ export default {
 							item-key="id"
 							no-data-text="Данные отсутствуют"/>
 				</v-col>
-			</v-scheduleRowDataHolder>
+			</v-row>
 		</v-card-text>
 	</v-card>
 </template>
