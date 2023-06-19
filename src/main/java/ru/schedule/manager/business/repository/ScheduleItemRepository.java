@@ -13,7 +13,7 @@ import ru.schedule.manager.business.entity.ScheduleItem;
 @Repository
 public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long>, JpaSpecificationExecutor<ScheduleItem> {
 
-	Optional<ScheduleItem> findByRowAndColAndTimes(final Integer row, final Integer col, final Times times);
+	Optional<ScheduleItem> findByRowAndColAndTimes(Integer row, Integer col, Times times);
 
 	@Query("select max(id) from schedule_item")
 	Long getMaxId();

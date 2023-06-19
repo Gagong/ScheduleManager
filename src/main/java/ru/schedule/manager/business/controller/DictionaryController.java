@@ -58,12 +58,12 @@ public class DictionaryController {
 	}
 
 	@GetMapping("containsKey")
-	public Boolean containsKey(@RequestParam final AdministeredDictionaryType type, @RequestParam String key) {
+	public Boolean containsKey(@RequestParam final AdministeredDictionaryType type, @RequestParam final String key) {
 		return administeredDictionaryService.containsKey(type, key);
 	}
 
 	@GetMapping("containsValue")
-	public Boolean containsValue(@RequestParam final AdministeredDictionaryType type, @RequestParam String value) {
+	public Boolean containsValue(@RequestParam final AdministeredDictionaryType type, @RequestParam final String value) {
 		return administeredDictionaryService.containsValue(type, value);
 	}
 

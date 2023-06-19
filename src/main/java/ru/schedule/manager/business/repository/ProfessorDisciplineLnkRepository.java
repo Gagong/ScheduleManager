@@ -14,8 +14,8 @@ import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Di
 public interface ProfessorDisciplineLnkRepository extends JpaRepository<ProfessorDisciplineLnk, Long>,
 	JpaSpecificationExecutor<ProfessorDisciplineLnk> {
 
-	Optional<ProfessorDisciplineLnk> findByProfessorAndDiscipline(final Dictionary professor, final Dictionary discipline);
+	Optional<ProfessorDisciplineLnk> findByProfessorAndDiscipline(Dictionary professor, Dictionary discipline);
 
-	List<ProfessorDisciplineLnk> findByProfessor(final Dictionary professor);
+	List<ProfessorDisciplineLnk> findByProfessor(Dictionary professor);
 
 }
