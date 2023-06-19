@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import ru.schedule.manager.business.dictionary.Times;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 
@@ -31,5 +32,9 @@ public class ScheduleItemDto extends BaseResponseDto {
 	private DictionaryDto professor;
 
 	private DictionaryDto classroom;
+
+	private DictionaryDto disciplineType;
+
+	private Times times;
 
 }

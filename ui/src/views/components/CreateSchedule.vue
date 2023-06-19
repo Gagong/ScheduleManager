@@ -1,875 +1,20 @@
 <script>
 
 import {DICTIONARY_API, PROFESSOR_DISCIPLINE_API, SCHEDULE_API} from "@/axios/axios";
+import getRowColor, {FRIDAY, MONDAY, SATURDAY, THURSDAY, TIME, TIMES, TUESDAY, WEDNESDAY} from "@/constants/constants";
 
 export default {
 	name: 'CreateSchedule',
 	data: () => ({
-		monday: [
-			{
-				text: 'Понедельник',
-				align: 'center',
-				sortable: false,
-				value: 'value'
-			},
-		],
-		tuesday: [
-			{
-				text: 'Вторник',
-				align: 'center',
-				sortable: false,
-				value: 'value'
-			},
-		],
-		wednesday: [
-			{
-				text: 'Среда',
-				align: 'center',
-				sortable: false,
-				value: 'value'
-			},
-		],
-		thursday: [
-			{
-				text: 'Четверг',
-				align: 'center',
-				sortable: false,
-				value: 'value'
-			},
-		],
-		friday: [
-			{
-				text: 'Пятница',
-				align: 'center',
-				sortable: false,
-				value: 'value'
-			},
-		],
-		saturday: [
-			{
-				text: 'Суббота',
-				align: 'center',
-				sortable: false,
-				value: 'value'
-			},
-		],
-		items: [
-			/*[
-				[
-					{
-						id: 1,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 1,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 1,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 1,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 1,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 1,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 1,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-			],
-			[
-				[
-					{
-						id: 1,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 2,
-						col: 1,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 2,
-						col: 2,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 2,
-						col: 3,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 2,
-						col: 4,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 2,
-						col: 5,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-				[
-					{
-						id: 1,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 2,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 3,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 4,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 5,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 6,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					},
-					{
-						id: 7,
-						row: 2,
-						col: 6,
-						value: "Нажмите для заполнения",
-						classroom: null,
-						professor: null,
-						discipline: null
-					}
-				],
-			]*/
-		],
-		time: [
-			{
-				text: 'Время',
-				align: 'center',
-				sortable: false,
-				value: 'time'
-			},
-		],
-		times: [
-			{
-				time: "8:00 - 9:35"
-			},
-			{
-				time: "9:50 - 11:25"
-			},
-			{
-				time: "11:40 - 13:15"
-			},
-			{
-				time: "14:00 - 15:35"
-			},
-			{
-				time: "15:50 - 17:25"
-			},
-			{
-				time: "17:40 - 19:15"
-			},
-			{
-				time: "19:25 - 21:00"
-			}
-		],
+		monday: MONDAY,
+		tuesday: TUESDAY,
+		wednesday: WEDNESDAY,
+		thursday: THURSDAY,
+		friday: FRIDAY,
+		saturday: SATURDAY,
+		items: [],
+		time: TIME,
+		times: TIMES,
 		dialog: false,
 		selectedItem: {
 			id: null,
@@ -878,44 +23,53 @@ export default {
 			value: null,
 			classroom: null,
 			professor: null,
-			discipline: null
+			discipline: null,
+			disciplineType: null
 		},
 		selectedDiscipline: null,
 		selectedClassroom: null,
 		selectedProfessor: null,
+		selectedDisciplineType: null,
 		disciplines: [],
 		classrooms: [],
 		professors: [],
+		disciplineTypes: [],
 		rules: {
 			required: value => !!value || 'Обязательное поле',
 		},
 	}),
 	methods: {
+		getRowColor,
 		openCard(event, data) {
 			this.selectedItem = data.item
+			this.selectedClassroom = data.item.classroom
+			this.selectedProfessor = data.item.professor
+			this.selectedDiscipline = data.item.discipline
+			this.selectedDisciplineType = data.item.disciplineType
 			this.dialog = true
 		},
 		rollback() {
 			this.selectedDiscipline = null
 			this.selectedClassroom = null
 			this.selectedProfessor = null
+			this.selectedDisciplineType = null
 			this.dialog = false
 		},
 		fillItem() {
-			if (this.selectedClassroom === null || this.selectedProfessor === null || this.selectedDiscipline === null) {
+			if (this.selectedClassroom === null || this.selectedProfessor === null || this.selectedDiscipline === null || this.selectedDisciplineType === null) {
 				alert("Заполните все обязательные поля!")
 				return
 			}
 			this.selectedItem.classroom = this.selectedClassroom
 			this.selectedItem.professor = this.selectedProfessor
 			this.selectedItem.discipline = this.selectedDiscipline
-			this.selectedItem.value = this.selectedClassroom.value + ', ' + this.selectedProfessor.value + ', ' + this.selectedDiscipline.value
+			this.selectedItem.disciplineType = this.selectedDisciplineType
+			this.selectedItem.value = this.selectedClassroom.value + ', ' + this.selectedProfessor.value + ', ' + this.selectedDisciplineType.value + ', ' + this.selectedDiscipline.value
 			for (let row in this.items) {
 				for (let col in this.items[row]) {
 					for (let item in this.items[row][col]) {
 						let value = this.items[row][col][item]
 						if (value.row === this.selectedItem.row && value.col === this.selectedItem.col && value.id === this.selectedItem.id) {
-							console.log(this.items[row][col][item])
 							this.items[row][col][item] = this.selectedItem
 						}
 					}
@@ -924,11 +78,60 @@ export default {
 			this.selectedDiscipline = null
 			this.selectedClassroom = null
 			this.selectedProfessor = null
+			this.selectedDisciplineType = null
 			this.dialog = false
+		},
+		deleteItem() {
+			console.log(this.selectedItem)
+			for (let row in this.items) {
+				for (let col in this.items[row]) {
+					for (let item in this.items[row][col]) {
+						for (let data in this.items[row][col][item]) {
+							for (let v in this.items[row][col][item][data]) {
+								let value = this.items[row][col][item][data][v]
+								if (value.row === this.selectedItem.row && value.col === this.selectedItem.col && value.id === this.selectedItem.id) {
+									SCHEDULE_API.delete(`delete/${value.id}`).then(resp => {
+										console.log(resp)
+										this.selectedItem.classroom = null
+										this.selectedItem.professor = null
+										this.selectedItem.discipline = null
+										this.selectedItem.disciplineType = null
+										this.selectedItem.value = "Нажмите для заполнения"
+										this.items[row][col][item][data][v] = this.selectedItem
+										this.selectedDiscipline = null
+										this.selectedClassroom = null
+										this.selectedProfessor = null
+										this.selectedDisciplineType = null
+										this.dialog = false
+									}).catch(e => {
+										console.log(e)
+										alert(e.response.data.message)
+									});
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		saveSchedule() {
+			SCHEDULE_API.post('save', this.items).then(resp => {
+				console.log(resp)
+				SCHEDULE_API.get('getSchedule').then(resp => {
+					console.log(resp)
+					this.items = resp.data
+				}).catch(e => {
+					console.log(e)
+					alert(e.response.data.message)
+				})
+			}).catch(e => {
+				console.log(e)
+				alert(e.response.data.message)
+			})
 		}
 	},
 	mounted() {
-		SCHEDULE_API.get('getDefaultItems').then(resp => {
+		SCHEDULE_API.get('getSchedule').then(resp => {
 			console.log(resp)
 			this.items = resp.data
 		}).catch(e => {
@@ -953,6 +156,17 @@ export default {
 		}).then(resp => {
 			console.log(resp)
 			this.professors = resp.data
+		}).catch(e => {
+			console.log(e)
+			alert(e.response.data.message)
+		});
+		DICTIONARY_API.get('getAllByType', {
+			params: {
+				type: 'DISCIPLINE_TYPE'
+			}
+		}).then(resp => {
+			console.log(resp)
+			this.disciplineTypes = resp.data
 		}).catch(e => {
 			console.log(e)
 			alert(e.response.data.message)
@@ -1032,12 +246,31 @@ export default {
 						</v-col>
 					</v-row>
 					<v-row>
+						<v-col cols="12">
+							<v-autocomplete
+									v-model="selectedDisciplineType"
+									:items="disciplineTypes"
+									:rules="[rules.required]"
+									clearable
+									dense
+									hide-details
+									item-text="value"
+									item-value="id"
+									label="Выберите тип занятия"
+									no-data-text="Нет данных"
+									outlined
+									return-object/>
+						</v-col>
+					</v-row>
+					<v-row>
 						<v-col cols="4">
 							<v-btn block color="info" @click="rollback">Отмена</v-btn>
 						</v-col>
-						<v-col cols="4"/>
 						<v-col cols="4">
 							<v-btn block color="success" @click="fillItem">Сохранить</v-btn>
+						</v-col>
+						<v-col cols="4">
+							<v-btn block color="error" @click="deleteItem">Удалить</v-btn>
 						</v-col>
 					</v-row>
 				</v-card-text>
@@ -1055,7 +288,7 @@ export default {
 							<v-data-table
 									:headers="time"
 									:items="times"
-									class="elevation-1"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="time"
@@ -1070,7 +303,8 @@ export default {
 							<v-data-table
 									:headers="monday"
 									:items="items[0].cols[0].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1082,7 +316,8 @@ export default {
 							<v-data-table
 									:headers="tuesday"
 									:items="items[0].cols[1].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1094,7 +329,8 @@ export default {
 							<v-data-table
 									:headers="wednesday"
 									:items="items[0].cols[2].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1106,7 +342,8 @@ export default {
 							<v-data-table
 									:headers="thursday"
 									:items="items[0].cols[3].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1118,7 +355,8 @@ export default {
 							<v-data-table
 									:headers="friday"
 									:items="items[0].cols[4].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1130,7 +368,8 @@ export default {
 							<v-data-table
 									:headers="saturday"
 									:items="items[0].cols[5].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1151,7 +390,7 @@ export default {
 							<v-data-table
 									:headers="time"
 									:items="times"
-									class="elevation-1"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="time"
@@ -1166,7 +405,8 @@ export default {
 							<v-data-table
 									:headers="monday"
 									:items="items[1].cols[0].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1178,7 +418,8 @@ export default {
 							<v-data-table
 									:headers="tuesday"
 									:items="items[1].cols[1].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1190,7 +431,8 @@ export default {
 							<v-data-table
 									:headers="wednesday"
 									:items="items[1].cols[2].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1202,7 +444,8 @@ export default {
 							<v-data-table
 									:headers="thursday"
 									:items="items[1].cols[3].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1214,7 +457,8 @@ export default {
 							<v-data-table
 									:headers="friday"
 									:items="items[1].cols[4].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1226,7 +470,8 @@ export default {
 							<v-data-table
 									:headers="saturday"
 									:items="items[1].cols[5].items"
-									class="elevation-1"
+									:item-class="getRowColor"
+									class="elevation-1 custom-table"
 									dense
 									hide-default-footer
 									item-key="id"
@@ -1240,7 +485,7 @@ export default {
 			<v-row>
 				<v-col cols="5"/>
 				<v-col cols="2">
-					<v-btn block color="success">Сохранить</v-btn>
+					<v-btn block color="success" @click="saveSchedule">Сохранить</v-btn>
 				</v-col>
 				<v-col cols="5"/>
 			</v-row>
@@ -1249,7 +494,36 @@ export default {
 </template>
 
 <style lang="css">
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
+.custom-table td {
 	font-size: 8pt !important;
+	height: 85px !important;
+}
+
+.discipline_type_715 {
+	background-color: #ffffff;
+}
+
+.discipline_type_716_717 {
+	background-color: #2dd5ff;
+}
+
+.discipline_type_718 {
+	background-color: #26ff3e;
+}
+
+.discipline_type_719 {
+	background-color: #ff513c;
+}
+
+.discipline_type_720 {
+	background-color: #ffdd2b;
+}
+
+.discipline_type_721 {
+	background-color: #ac4bff;
+}
+
+.discipline_type_722 {
+	background-color: #1affe1;
 }
 </style>

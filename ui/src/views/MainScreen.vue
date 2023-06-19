@@ -21,6 +21,7 @@
 					<!--Справочники-->
 					<v-tab-item>
 						<v-row>
+							<v-col cols="1"/>
 							<v-col cols="2">
 								<v-toolbar flat>
 									<v-toolbar-items>
@@ -34,22 +35,29 @@
 									</v-toolbar-items>
 								</v-toolbar>
 							</v-col>
-							<v-col cols="10">
+							<v-col cols="8">
 								<v-tabs-items v-model="dictionaryTab">
 									<v-tab-item v-for="dictionary in dictionaries" :key="dictionary.key">
 										<DictionaryTab :dictionary="dictionary"/>
 									</v-tab-item>
 								</v-tabs-items>
 							</v-col>
+							<v-col cols="1"/>
 						</v-row>
 					</v-tab-item>
 					<!--Преподаватель-Дисциплина-->
 					<v-tab-item>
-						<ProfessorDiscipline/>
+						<v-row>
+							<v-col cols="1"/>
+							<v-col cols="10">
+								<ProfessorDiscipline/>
+							</v-col>
+							<v-col cols="1"/>
+						</v-row>
 					</v-tab-item>
 					<!--Расписание-->
 					<v-tab-item>
-
+						<GeneralSchedule/>
 					</v-tab-item>
 					<!--Составление расписания-->
 					<v-tab-item>
@@ -72,10 +80,12 @@ import {DICTIONARY_API} from "@/axios/axios";
 import DictionaryTab from "@/views/components/DictionaryTab.vue";
 import ProfessorDiscipline from "@/views/components/ProfessorDiscipline.vue";
 import CreateSchedule from "@/views/components/CreateSchedule.vue";
+import GeneralSchedule from "@/views/components/GeneralSchedule.vue";
 
 export default {
 	name: 'MainScreen',
 	components: {
+		GeneralSchedule,
 		CreateSchedule,
 		ProfessorDiscipline,
 		DictionaryTab

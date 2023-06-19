@@ -1,5 +1,6 @@
 package ru.schedule.manager.business.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,7 +46,11 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 
 	@Override
 	public List<ProfessorDisciplineLnkDto> fromEntity(final List<ProfessorDisciplineLnk> entities) {
-		return entities.stream().filter(Objects::nonNull).map(this::fromEntity).collect(Collectors.toList());
+		return entities.stream()
+			.filter(Objects::nonNull)
+			.map(this::fromEntity)
+			.sorted(Comparator.comparing(value -> value.getDiscipline().getValue()))
+			.collect(Collectors.toList());
 	}
 
 	@Override

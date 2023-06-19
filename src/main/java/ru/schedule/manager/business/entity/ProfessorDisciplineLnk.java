@@ -26,6 +26,8 @@ import ru.schedule.manager.infrastructure.base.serializer.BaseEntitySerializer;
 @Table(name = "professor_discipline_lnk")
 public class ProfessorDisciplineLnk extends BaseEntity {
 
+	private static final long serialVersionUID = 1L;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonSerialize(using = BaseEntitySerializer.class)
 	@JoinColumn(name = "discipline", nullable = false)

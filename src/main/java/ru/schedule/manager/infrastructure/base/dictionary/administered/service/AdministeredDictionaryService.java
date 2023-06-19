@@ -1,5 +1,6 @@
 package ru.schedule.manager.infrastructure.base.dictionary.administered.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,7 +48,11 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 
 	@Override
 	public List<DictionaryDto> fromEntity(final List<Dictionary> entities) {
-		return entities.stream().filter(Objects::nonNull).map(this::fromEntity).collect(Collectors.toList());
+		return entities.stream()
+			.filter(Objects::nonNull)
+			.map(this::fromEntity)
+			.sorted(Comparator.comparing(DictionaryDto::getValue))
+			.collect(Collectors.toList());
 	}
 
 	@Override

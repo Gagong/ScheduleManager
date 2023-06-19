@@ -68,4 +68,64 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="CREATE SCHEDULE_ITEM TABLE" author="sm">
+        <createTable tableName="SCHEDULE_ITEM">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--Custom fields-->
+            <column name="ROW" remarks="Неделя" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COL" remarks="День" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TIMES" remarks="Время" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--FK fields-->
+            <column name="PROFESSOR" remarks="Преподаватель" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="DICTIONARY"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__SCHEDULE_ITEM__PROFESSOR__DICTIONARY__ID"
+                />
+            </column>
+            <column name="DISCIPLINE" remarks="Дисциплина" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="DICTIONARY"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__SCHEDULE_ITEM__DISCIPLINE__DICTIONARY__ID"
+                />
+            </column>
+            <column name="CLASSROOM" remarks="Аудитория" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="DICTIONARY"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__SCHEDULE_ITEM__CLASSROOM__DICTIONARY__ID"
+                />
+            </column>
+            <column name="DISCIPLINE_TYPE" remarks="Тип дисциплины" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="DICTIONARY"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__SCHEDULE_ITEM__DISCIPLINE_TYPE__DICTIONARY__ID"
+                />
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

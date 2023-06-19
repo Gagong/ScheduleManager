@@ -15,7 +15,8 @@ public enum AdministeredDictionaryType implements Serializable, SimpleDictionary
 
 	CLASSROOM("Аудитория"),
 	PROFESSOR("Преподаватели"),
-	DISCIPLINE("Дисциплина");
+	DISCIPLINE("Дисциплина"),
+	DISCIPLINE_TYPE("Тип занятия");
 
 	private final String value;
 

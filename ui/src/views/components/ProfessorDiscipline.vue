@@ -66,7 +66,7 @@ export default {
 				console.log(e)
 				alert(e.response.data.message)
 			})
-		}
+		},
 	},
 	mounted() {
 		DICTIONARY_API.get('getAllByType', {
@@ -103,7 +103,7 @@ export default {
 </script>
 
 <template>
-	<v-card>
+	<v-card flat>
 		<v-card-title>
 			Связь "Преподаватель - Дисциплина"
 		</v-card-title>
@@ -150,6 +150,7 @@ export default {
 			<v-row v-if="professor !== null && professor !== undefined">
 				<v-col cols="12">
 					<v-data-table
+							item-class=""
 							:headers="headers"
 							:items="items"
 							:items-per-page="10"

@@ -13,4 +13,25 @@
         </loadUpdateData>
     </changeSet>
 
+    <changeSet id="LOAD SCHEDULE ITEMS" author="sm">
+        <loadUpdateData tableName="SCHEDULE_ITEM" primaryKey="ID" separator=";" file="db/changelog/latest/data/SCHEDULE_ITEM.csv">
+            <column header="ID" name="ID" type="NUMERIC"/>
+            <column header="ROW" name="ROW" type="NUMERIC"/>
+            <column header="COL" name="COL" type="NUMERIC"/>
+            <column header="TIMES" name="TIMES" type="NUMERIC"/>
+            <column header="PROFESSOR" name="PROFESSOR" type="NUMERIC"/>
+            <column header="DISCIPLINE" name="DISCIPLINE" type="NUMERIC"/>
+            <column header="CLASSROOM" name="CLASSROOM" type="NUMERIC"/>
+            <column header="DISCIPLINE_TYPE" name="DISCIPLINE_TYPE" type="NUMERIC"/>
+        </loadUpdateData>
+    </changeSet>
+
+    <changeSet id="LOAD PROFESSOR DISCIPLINES" author="sm">
+        <loadUpdateData tableName="PROFESSOR_DISCIPLINE_LNK" primaryKey="ID" separator=";" file="db/changelog/latest/data/PROFESSOR_DISCIPLINE.csv">
+            <column header="ID" name="ID" type="NUMERIC"/>
+            <column header="PROFESSOR" name="PROFESSOR" type="NUMERIC"/>
+            <column header="DISCIPLINE" name="DISCIPLINE" type="NUMERIC"/>
+        </loadUpdateData>
+    </changeSet>
+
 </databaseChangeLog>
