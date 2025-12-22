@@ -65,8 +65,7 @@ export default {
 				key: this.key,
 				value: this.value
 			}
-			DICTIONARY_API.post('create', dto).then(resp => {
-				console.log(resp)
+			DICTIONARY_API.post('create', dto).then(() => {
 				this.fetchDictionaryTable()
 				this.key = null;
 				this.value = null;
@@ -76,8 +75,7 @@ export default {
 			})
 		},
 		updateDictionaryValue() {
-			DICTIONARY_API.patch('update', this.selectedDto).then(resp => {
-				console.log(resp)
+			DICTIONARY_API.patch('update', this.selectedDto).then(() => {
 				this.fetchDictionaryTable()
 				this.blocked = true;
 				this.key = null;
@@ -97,7 +95,6 @@ export default {
 					type: this.dictionary.key
 				}
 			}).then(resp => {
-				console.log(resp)
 				this.items = resp.data
 			}).catch(e => {
 				console.log(e)

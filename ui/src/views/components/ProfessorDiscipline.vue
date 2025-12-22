@@ -49,8 +49,7 @@ export default {
 			PROFESSOR_DISCIPLINE_API.post('addProfessorDiscipline', {
 				professor: this.professor,
 				disciplines: this.disciplines
-			}).then(resp => {
-				console.log(resp)
+			}).then(() => {
 				this.fetchProfessorDisciplines(this.professor)
 				this.disciplines = []
 			}).catch(e => {
@@ -60,7 +59,6 @@ export default {
 		},
 		fetchProfessorDisciplines(professor) {
 			PROFESSOR_DISCIPLINE_API.post('getProfessorDisciplines', professor).then(resp => {
-				console.log(resp)
 				this.items = resp.data
 			}).catch(e => {
 				console.log(e)
@@ -74,7 +72,6 @@ export default {
 				type: 'PROFESSOR'
 			}
 		}).then(resp => {
-			console.log(resp)
 			this.professors = resp.data
 		}).catch(e => {
 			console.log(e)
@@ -85,7 +82,6 @@ export default {
 				type: 'DISCIPLINE'
 			}
 		}).then(resp => {
-			console.log(resp)
 			this.disciplines = resp.data
 		}).catch(e => {
 			console.log(e)

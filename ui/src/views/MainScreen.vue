@@ -2,7 +2,7 @@
 	<v-container fluid>
 		<v-row>
 			<v-toolbar dense flat>
-				<v-toolbar-title>Менеджер расписания</v-toolbar-title>
+				<v-toolbar-title>Менеджер расписания | {{username}}</v-toolbar-title>
 				<v-spacer/>
 				<v-toolbar-items>
 					<v-tabs v-model="tab">
@@ -11,6 +11,7 @@
 						<v-tab>Преподаватель - Дисциплина</v-tab>
 						<v-tab>Расписание</v-tab>
 						<v-tab>Составление расписания</v-tab>
+            <v-tab @click="handleLogout">Выход</v-tab>
 					</v-tabs>
 				</v-toolbar-items>
 			</v-toolbar>
@@ -25,11 +26,10 @@
 							<v-col cols="2">
 								<v-toolbar flat>
 									<v-toolbar-items>
-										<v-tabs v-model="dictionaryTab" vertical>
+										<v-tabs style="height: 1000px" v-model="dictionaryTab" vertical>
 											<v-tabs-slider color="#283593"/>
-											<v-tab v-for="dictionary in dictionaries" :key="dictionary.key" class="left-tab">{{
-													dictionary.value
-												}}
+											<v-tab v-for="dictionary in dictionaries" :key="dictionary.key" class="left-tab">
+                        {{dictionary.value }}
 											</v-tab>
 										</v-tabs>
 									</v-toolbar-items>
@@ -69,7 +69,7 @@
 	</v-container>
 </template>
 
-<style>
+<style scoped>
 .left-tab {
 	justify-content: left !important;
 }
@@ -81,6 +81,9 @@ import DictionaryTab from "@/views/components/DictionaryTab.vue";
 import ProfessorDiscipline from "@/views/components/ProfessorDiscipline.vue";
 import CreateSchedule from "@/views/components/CreateSchedule.vue";
 import GeneralSchedule from "@/views/components/GeneralSchedule.vue";
+import store from "@/store";
+import router from "@/router";
+import {computed} from "vue";
 
 export default {
 	name: 'MainScreen',
@@ -95,15 +98,28 @@ export default {
 		dictionaries: [],
 		dictionaryTab: 0,
 	}),
+  setup() {
+    const username = computed(() => store.getters.username);
+    return {
+      username
+    }
+  },
 	mounted() {
 		DICTIONARY_API.get('getAll')
 			.then(resp => {
-				console.log(resp)
 				this.dictionaries = resp.data
+        console.log(resp.data)
+        console.log(this.dictionaries)
 			})
 			.catch(e => {
 				console.log(e)
 			})
-	}
+	},
+  methods: {
+    handleLogout() {
+      store.dispatch('logout');
+      router.push('/login');
+    }
+  }
 }
 </script>

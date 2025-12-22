@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,6 @@ import ru.schedule.manager.infrastructure.base.dictionary.administered.service.A
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
-import static ru.schedule.manager.infrastructure.base.dictionary.administered.AdministeredDictionaryType.DISCIPLINE;
-import static ru.schedule.manager.infrastructure.base.dictionary.administered.AdministeredDictionaryType.containsValue;
 
 @Service
 @RequiredArgsConstructor
@@ -71,9 +70,12 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 	}
 
 	@Override
+	@SneakyThrows
 	public ProfessorDisciplineLnkDto create(final ProfessorDisciplineLnkDto dto) {
-		if (containsValue(DISCIPLINE, dto.getDiscipline().getValue()) && containsValue(DISCIPLINE, dto.getProfessor().getValue())) {
-			throw new UnsupportedOperationException(UNSUPPORTED_CREATE_ALREADY_EXISTS_DICTIONARY_VALUES_ERROR);
+		if (professorDisciplineLnkRepository.findByProfessorAndDiscipline(
+			dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow(),
+			dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow()).isPresent()) {
+			throw new IllegalAccessException("Запись с такими параметрами уже существует");
 		}
 		return this.fromEntity(
 			professorDisciplineLnkRepository.save(

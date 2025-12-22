@@ -82,7 +82,6 @@ export default {
 			this.dialog = false
 		},
 		deleteItem() {
-			console.log(this.selectedItem)
 			for (let row in this.items) {
 				for (let col in this.items[row]) {
 					for (let item in this.items[row][col]) {
@@ -90,8 +89,7 @@ export default {
 							for (let v in this.items[row][col][item][data]) {
 								let value = this.items[row][col][item][data][v]
 								if (value.row === this.selectedItem.row && value.col === this.selectedItem.col && value.id === this.selectedItem.id) {
-									SCHEDULE_API.delete(`delete/${value.id}`).then(resp => {
-										console.log(resp)
+									SCHEDULE_API.delete(`delete/${value.id}`).then(() => {
 										this.selectedItem.classroom = null
 										this.selectedItem.professor = null
 										this.selectedItem.discipline = null
@@ -115,10 +113,8 @@ export default {
 			}
 		},
 		saveSchedule() {
-			SCHEDULE_API.post('save', this.items).then(resp => {
-				console.log(resp)
+			SCHEDULE_API.post('save', this.items).then(() => {
 				SCHEDULE_API.get('getSchedule').then(resp => {
-					console.log(resp)
 					this.items = resp.data
 				}).catch(e => {
 					console.log(e)
@@ -132,7 +128,6 @@ export default {
 	},
 	mounted() {
 		SCHEDULE_API.get('getSchedule').then(resp => {
-			console.log(resp)
 			this.items = resp.data
 		}).catch(e => {
 			console.log(e)
@@ -143,7 +138,6 @@ export default {
 				type: 'CLASSROOM'
 			}
 		}).then(resp => {
-			console.log(resp)
 			this.classrooms = resp.data
 		}).catch(e => {
 			console.log(e)
@@ -154,7 +148,6 @@ export default {
 				type: 'PROFESSOR'
 			}
 		}).then(resp => {
-			console.log(resp)
 			this.professors = resp.data
 		}).catch(e => {
 			console.log(e)
@@ -165,7 +158,6 @@ export default {
 				type: 'DISCIPLINE_TYPE'
 			}
 		}).then(resp => {
-			console.log(resp)
 			this.disciplineTypes = resp.data
 		}).catch(e => {
 			console.log(e)
@@ -176,7 +168,6 @@ export default {
 		selectedProfessor(value) {
 			if (value) {
 				PROFESSOR_DISCIPLINE_API.post('getProfessorDisciplines', value).then(resp => {
-					console.log(resp)
 					this.disciplines = resp.data.map(data => data.discipline)
 				}).catch(e => {
 					console.log(e)

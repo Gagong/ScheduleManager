@@ -18,7 +18,6 @@ export default {
 	}),
 	mounted() {
 		SCHEDULE_API.get('getSchedule').then(resp => {
-			console.log(resp)
 			this.items = resp.data
 		}).catch(e => {
 			console.log(e)

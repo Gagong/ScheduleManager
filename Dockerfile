@@ -1,4 +1,4 @@
-FROM openjdk:11.0.7_autoheap
+FROM openjdk:11.0.16
 
 ARG JAR_ARTIFACT
 
