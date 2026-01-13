@@ -1,9 +1,8 @@
 package ru.schedule.manager.business.dataholder;
 
-import java.util.List;
-
-import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ScheduleRowDataHolder {

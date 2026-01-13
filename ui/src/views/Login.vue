@@ -3,15 +3,20 @@
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="pa-6">
-          <v-card-title class="text-center justify-center">
-            <h2 class="text-h4 font-weight-bold">
-              Менеджер расписания
-            </h2>
-            <h3 class="text-h6 mt-2">
-              Авторизация
-            </h3>
-          </v-card-title>
-
+          <v-row dense class="text-center justify-center">
+            <v-col dense cols="12">
+              <h2 class="text-h4 font-weight-bold">
+                Менеджер расписания
+              </h2>
+            </v-col>
+          </v-row>
+          <v-row dense class="text-center justify-center">
+            <v-col dense cols="12">
+              <h3 class="text-h6 mt-2">
+                Авторизация
+              </h3>
+            </v-col>
+          </v-row>
           <v-card-text>
             <v-form @submit.prevent="handleLogin">
               <v-text-field
@@ -23,6 +28,7 @@
                   required
                   :disabled="loading"
                   class="mb-4"
+                  dense
               />
 
               <v-text-field
@@ -35,6 +41,7 @@
                   required
                   :disabled="loading"
                   class="mb-4"
+                  dense
               />
 
               <v-btn
@@ -77,7 +84,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import router from "@/router/router";
 import store from "@/store/store";
 
