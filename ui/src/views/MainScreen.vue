@@ -81,8 +81,8 @@ import DictionaryTab from "@/views/components/DictionaryTab.vue";
 import ProfessorDiscipline from "@/views/components/ProfessorDiscipline.vue";
 import CreateSchedule from "@/views/components/CreateSchedule.vue";
 import GeneralSchedule from "@/views/components/GeneralSchedule.vue";
-import store from "@/store";
-import router from "@/router";
+import store from "@/store/store";
+import router from "@/router/router";
 import {computed} from "vue";
 
 export default {

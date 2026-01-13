@@ -46,6 +46,8 @@
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+
+        <swagger.version>1.7.0</swagger.version>
     </properties>
 
     <dependencies>
@@ -194,6 +196,11 @@
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
             <version>${hibernate-types.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
     </dependencies>
 

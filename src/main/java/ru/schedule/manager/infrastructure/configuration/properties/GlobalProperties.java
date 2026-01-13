@@ -12,7 +12,7 @@ public class GlobalProperties {
 	public static final String DEFAULT_API_PATH = "api/";
 
 	public static final Pattern DEFAULT_API_REQUEST_PATTERN = Pattern.compile(
-		"(?!/actuator|/api|/_nuxt|/static|/index\\.html|/200\\.html|/favicon\\.ico|/sw\\.js).*$"
+		"(?!/actuator|/webjars|/swagger-ui|/api|/_nuxt|/static|/index\\.html|/200\\.html|/favicon\\.ico|/sw\\.js).*$"
 	);
 
 	public static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:8080", "https://localhost:8080");

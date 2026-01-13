@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class ScheduleRowDataHolder {
 
-	@Builder.Default
 	private final List<ScheduleColDataHolder> cols;
 
 }

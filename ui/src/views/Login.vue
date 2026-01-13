@@ -78,8 +78,8 @@
 
 <script>
 import { ref } from 'vue';
-import router from "@/router";
-import store from "@/store";
+import router from "@/router/router";
+import store from "@/store/store";
 
 export default {
   name: 'LoginView',

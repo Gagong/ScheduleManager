@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router';
 import MainScreen from '../views/MainScreen.vue'
 import Login from "@/views/Login.vue";
-import store from "../store"
+import store from "../store/store"
 
 Vue.use(VueRouter)
 
@@ -32,13 +32,13 @@ router.beforeEach(async (to, from, next) => {
 		if (!isAuthenticated) {
 			next('/login');
 		} else {
-			next('/');
+			next();
 		}
 	} else {
 		if (to.name === 'login') {
 			const isAuthenticated = await store.dispatch('checkAuth');
 			if (isAuthenticated) {
-				next('/');
+				next();
 				return;
 			}
 		}

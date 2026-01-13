@@ -10,7 +10,6 @@ import ru.schedule.manager.business.dto.ScheduleItemDto;
 @Data
 public class ScheduleColDataHolder {
 
-	@Builder.Default
 	private final List<ScheduleItemDto> items;
 
 }

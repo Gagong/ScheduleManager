@@ -11,8 +11,7 @@ import ru.schedule.manager.business.entity.ProfessorDisciplineLnk;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 
 @Repository
-public interface ProfessorDisciplineLnkRepository extends JpaRepository<ProfessorDisciplineLnk, Long>,
-	JpaSpecificationExecutor<ProfessorDisciplineLnk> {
+public interface ProfessorDisciplineLnkRepository extends JpaRepository<ProfessorDisciplineLnk, Long>, JpaSpecificationExecutor<ProfessorDisciplineLnk> {
 
 	Optional<ProfessorDisciplineLnk> findByProfessorAndDiscipline(Dictionary professor, Dictionary discipline);
 

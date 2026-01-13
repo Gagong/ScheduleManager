@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {DICTIONARY_API} from "@/axios/axios";
+import {LOGIN_API} from "@/axios/axios";
 
 Vue.use(Vuex)
 
@@ -34,7 +34,7 @@ export default new Vuex.Store({
 			try {
 				commit('SET_CREDENTIALS', { username, password });
 
-				await DICTIONARY_API.get('/getAll');
+				await LOGIN_API.get('');
 
 				commit('SET_AUTHENTICATED', true);
 				return { success: true };
@@ -58,7 +58,7 @@ export default new Vuex.Store({
 			}
 
 			try {
-				await DICTIONARY_API.get('/getAll');
+				await LOGIN_API.get('');
 				commit('SET_AUTHENTICATED', true);
 				return true;
 			} catch (error) {

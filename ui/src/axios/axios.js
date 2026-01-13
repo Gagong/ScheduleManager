@@ -1,5 +1,17 @@
 import axios from 'axios'
-import store from '../store/index'
+import store from '../store/store'
+
+export const LOGIN_API = axios.create({
+	baseURL: `http://localhost:8081/api/login`,
+	headers: {
+		'Access-Control-Allow-Origin': 'http://localhost:8080'
+	}
+})
+
+LOGIN_API.interceptors.request.use(
+	successConfig(),
+	errorConfig()
+);
 
 export const DICTIONARY_API = axios.create({
 	baseURL: `http://localhost:8081/api/dictionary`,
