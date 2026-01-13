@@ -5,7 +5,7 @@
     <scripts>
       <script value="serve" />
     </scripts>
-    <node-interpreter value="project" />
+    <node-interpreter value="$APPLICATION_CONFIG_DIR$/node/versions/18.20.8/node" />
     <envs />
     <method v="2" />
   </configuration>
