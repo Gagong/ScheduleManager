@@ -1,24 +1,23 @@
 package ru.schedule.manager.business.service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-
 import org.springframework.stereotype.Service;
-
 import ru.schedule.manager.business.dto.ProfessorDisciplineLnkDto;
 import ru.schedule.manager.business.entity.ProfessorDisciplineLnk;
 import ru.schedule.manager.business.exception.EntityNotFoundException;
 import ru.schedule.manager.business.exception.ExceptionMessageUtils;
 import ru.schedule.manager.business.repository.ProfessorDisciplineLnkRepository;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.repository.DictionaryRepository;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
 
@@ -72,16 +71,16 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 	@Override
 	@SneakyThrows
 	public ProfessorDisciplineLnkDto create(final ProfessorDisciplineLnkDto dto) {
-		if (professorDisciplineLnkRepository.findByProfessorAndDiscipline(
-			dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow(),
-			dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow()).isPresent()) {
+		final Dictionary professor = dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow();
+		final Dictionary discipline = dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow();
+		if (professorDisciplineLnkRepository.findByProfessorAndDiscipline(professor, discipline).isPresent()) {
 			throw new IllegalAccessException("Запись с такими параметрами уже существует");
 		}
 		return this.fromEntity(
 			professorDisciplineLnkRepository.save(
 				ProfessorDisciplineLnk.builder()
-					.discipline(dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow())
-					.professor(dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow())
+					.discipline(discipline)
+					.professor(professor)
 					.build()
 			)
 		);

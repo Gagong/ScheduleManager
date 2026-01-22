@@ -108,10 +108,7 @@ export default {
 		DICTIONARY_API.get('getAll')
 			.then(resp => {
 				this.dictionaries = resp.data
-        console.log(resp.data)
-        console.log(this.dictionaries)
-			})
-			.catch(e => {
+			}).catch(e => {
 				console.log(e)
 			})
 	},

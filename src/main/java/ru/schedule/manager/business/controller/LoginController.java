@@ -16,7 +16,7 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 public class LoginController {
 
 	@GetMapping
-	public ResponseEntity<Void> delete() {
+	public ResponseEntity<Void> login() {
 		return ResponseEntity.ok().build();
 	}
 
