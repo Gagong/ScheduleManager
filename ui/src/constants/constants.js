@@ -57,32 +57,8 @@ export const TIME = [
 		text: 'Время',
 		align: 'center',
 		sortable: false,
-		value: 'time'
+		value: 'value'
 	},
-]
-
-export const TIMES = [
-	{
-		time: "8:00 - 9:35"
-	},
-	{
-		time: "9:50 - 11:25"
-	},
-	{
-		time: "11:40 - 13:15"
-	},
-	{
-		time: "14:00 - 15:35"
-	},
-	{
-		time: "15:50 - 17:25"
-	},
-	{
-		time: "17:40 - 19:15"
-	},
-	{
-		time: "19:25 - 21:00"
-	}
 ]
 
 export default function getRowColor(item) {
@@ -108,4 +84,8 @@ export default function getRowColor(item) {
 		default:
 			return;
 	}
+}
+
+export function arrayToUriParams(array, key) {
+	return array.map(t => `${key}=${encodeURIComponent(t)}`).join('&')
 }

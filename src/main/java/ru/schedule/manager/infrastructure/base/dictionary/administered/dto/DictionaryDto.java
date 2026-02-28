@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
 import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 
 @Getter
@@ -22,5 +21,9 @@ public class DictionaryDto extends BaseResponseDto {
 	private String key;
 
 	private String value;
+
+	private boolean active;
+
+	private int displayOrder;
 
 }

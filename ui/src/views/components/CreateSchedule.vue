@@ -1,7 +1,16 @@
 <script>
 
-import {DICTIONARY_API, PROFESSOR_DISCIPLINE_API, SCHEDULE_API} from "@/axios/axios";
-import getRowColor, {FRIDAY, MONDAY, SATURDAY, THURSDAY, TIME, TIMES, TUESDAY, WEDNESDAY} from "@/constants/constants";
+import {DICTIONARY_API, PROFESSOR_API, SCHEDULE_API} from "@/axios/axios";
+import getRowColor, {
+  arrayToUriParams,
+  FRIDAY,
+  MONDAY,
+  SATURDAY,
+  THURSDAY,
+  TIME,
+  TUESDAY,
+  WEDNESDAY
+} from "@/constants/constants";
 
 export default {
 	name: 'CreateSchedule',
@@ -14,7 +23,7 @@ export default {
 		saturday: SATURDAY,
 		items: [],
 		time: TIME,
-		times: TIMES,
+		times: [],
 		dialog: false,
 		selectedItem: {
 			id: null,
@@ -115,7 +124,7 @@ export default {
 		saveSchedule() {
 			SCHEDULE_API.post('save', this.items).then(() => {
 				SCHEDULE_API.get('getSchedule').then(resp => {
-					this.items = resp.data
+					this.items = resp.data.rows
 				}).catch(e => {
 					console.log(e)
 					alert(e.response.data.message)
@@ -127,47 +136,34 @@ export default {
 		}
 	},
 	mounted() {
-		SCHEDULE_API.get('getSchedule').then(resp => {
-			this.items = resp.data
-		}).catch(e => {
-			console.log(e)
-			alert(e.response.data.message)
-		});
-		DICTIONARY_API.get('getAllByType', {
-			params: {
-				type: 'CLASSROOM'
-			}
-		}).then(resp => {
-			this.classrooms = resp.data
-		}).catch(e => {
-			console.log(e)
-			alert(e.response.data.message)
-		});
-		DICTIONARY_API.get('getAllByType', {
-			params: {
-				type: 'PROFESSOR'
-			}
-		}).then(resp => {
-			this.professors = resp.data
-		}).catch(e => {
-			console.log(e)
-			alert(e.response.data.message)
-		});
-		DICTIONARY_API.get('getAllByType', {
-			params: {
-				type: 'DISCIPLINE_TYPE'
-			}
-		}).then(resp => {
-			this.disciplineTypes = resp.data
-		}).catch(e => {
-			console.log(e)
-			alert(e.response.data.message)
-		});
+    DICTIONARY_API.get('getAllByType', {
+      params: {
+        type: 'LESSON_TIME'
+      }
+    }).then(resp => {
+      this.times = resp.data
+    }).catch(e => {
+      console.log(e)
+      alert(e.response.data.message)
+    }).then(() => SCHEDULE_API.get('getSchedule').then(resp => {
+      this.items = resp.data.rows
+    }).catch(e => {
+      console.log(e)
+      alert(e.response.data.message)
+    }))
+    DICTIONARY_API.get(`getAllByTypes?${arrayToUriParams(['CLASSROOM','PROFESSOR','DISCIPLINE_TYPE'], "types")}`).then(resp => {
+      this.classrooms = resp.data.CLASSROOM
+      this.professors = resp.data.PROFESSOR
+      this.disciplineTypes = resp.data.DISCIPLINE_TYPE
+    }).catch(e => {
+      console.log(e)
+      alert(e.response.data.message)
+    })
 	},
 	watch: {
 		selectedProfessor(value) {
 			if (value) {
-				PROFESSOR_DISCIPLINE_API.post('getProfessorDisciplines', value).then(resp => {
+				PROFESSOR_API.post('getProfessorDisciplines', value).then(resp => {
 					this.disciplines = resp.data.map(data => data.discipline)
 				}).catch(e => {
 					console.log(e)
@@ -268,7 +264,7 @@ export default {
 			</v-card>
 		</v-dialog>
 		<v-card-title>Составление расписания</v-card-title>
-		<v-card-text>
+		<v-card-text v-if="this.items != null && this.items !== 'undefined' && this.items.length !== 0">
 			<br/>
 			<h3 style="text-align: center">Первая неделя</h3>
 			<br/>

@@ -8,7 +8,7 @@
 					<v-tabs v-model="tab">
 						<v-tabs-slider color="#283593"/>
 						<v-tab>Справочники</v-tab>
-						<v-tab>Преподаватель - Дисциплина</v-tab>
+						<v-tab>Преподаватели</v-tab>
 						<v-tab>Расписание</v-tab>
 						<v-tab>Составление расписания</v-tab>
             <v-tab @click="handleLogout">Выход</v-tab>
@@ -38,19 +38,19 @@
 							<v-col cols="8">
 								<v-tabs-items v-model="dictionaryTab">
 									<v-tab-item v-for="dictionary in dictionaries" :key="dictionary.key">
-										<DictionaryTab :dictionary="dictionary"/>
+										<DictionaryTab :dictionary="dictionary" :canEdit="dictionary.key !== 'LESSON_TIME' && dictionary.key !== 'SEMESTER'"/>
 									</v-tab-item>
 								</v-tabs-items>
 							</v-col>
 							<v-col cols="1"/>
 						</v-row>
 					</v-tab-item>
-					<!--Преподаватель-Дисциплина-->
+					<!--Преподаватели-->
 					<v-tab-item>
 						<v-row>
 							<v-col cols="1"/>
 							<v-col cols="10">
-								<ProfessorDiscipline/>
+								<Professor/>
 							</v-col>
 							<v-col cols="1"/>
 						</v-row>
@@ -78,7 +78,7 @@
 <script>
 import {DICTIONARY_API} from "@/axios/axios";
 import DictionaryTab from "@/views/components/DictionaryTab.vue";
-import ProfessorDiscipline from "@/views/components/ProfessorDiscipline.vue";
+import Professor from "@/views/components/Professor.vue";
 import CreateSchedule from "@/views/components/CreateSchedule.vue";
 import GeneralSchedule from "@/views/components/GeneralSchedule.vue";
 import store from "@/store/store";
@@ -90,7 +90,7 @@ export default {
 	components: {
 		GeneralSchedule,
 		CreateSchedule,
-		ProfessorDiscipline,
+		Professor,
 		DictionaryTab
 	},
 	data: () => ({

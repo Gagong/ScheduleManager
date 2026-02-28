@@ -37,14 +37,14 @@ SCHEDULE_API.interceptors.request.use(
 	errorConfig()
 );
 
-export const PROFESSOR_DISCIPLINE_API = axios.create({
-	baseURL: `http://localhost:8081/api/professorDiscipline`,
+export const PROFESSOR_API = axios.create({
+	baseURL: `http://localhost:8081/api/professor`,
 	headers: {
 		'Access-Control-Allow-Origin': 'http://localhost:8080'
 	}
 })
 
-PROFESSOR_DISCIPLINE_API.interceptors.request.use(
+PROFESSOR_API.interceptors.request.use(
 	successConfig(),
 	errorConfig()
 );

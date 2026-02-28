@@ -1,27 +1,36 @@
 package ru.schedule.manager.infrastructure.base.dictionary.administered.service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.apache.commons.lang3.ObjectUtils;
+import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
 import ru.schedule.manager.business.exception.EntityNotFoundException;
 import ru.schedule.manager.business.exception.ExceptionMessageUtils;
-import ru.schedule.manager.infrastructure.base.dictionary.administered.AdministeredDictionaryType;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.repository.DictionaryRepository;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
+import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static ru.schedule.manager.business.dictionary.SemesterType.AUTUMN;
+import static ru.schedule.manager.business.dictionary.SemesterType.SPRING;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.DICTIONARY_KEY_NOT_FOUND_EXCEPTION_PATTERN;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
 
+@Slf4j
 @Service
 public class AdministeredDictionaryService implements BaseServiceAware<Dictionary, DictionaryDto>, IAdministeredDictionary {
 
@@ -40,6 +49,8 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 			.type(entity.getDictionaryType().getDictionaryKey())
 			.key(entity.getDictionaryKey())
 			.value(entity.getDictionaryValue())
+			.active(entity.isActive())
+			.displayOrder(entity.getDisplayOrder())
 			.id(entity.getId())
 			.createdDateTime(entity.getCreatedDateTime())
 			.updateDateTime(entity.getUpdateDateTime())
@@ -51,7 +62,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		return entities.stream()
 			.filter(Objects::nonNull)
 			.map(this::fromEntity)
-			.sorted(Comparator.comparing(DictionaryDto::getValue))
+			.sorted(Comparator.comparing(DictionaryDto::getDisplayOrder).thenComparing(DictionaryDto::getValue))
 			.collect(Collectors.toList());
 	}
 
@@ -76,19 +87,14 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 				Dictionary.class.getSimpleName(),
 				dto.getId()
 			)));
-		if (containsKey(entity.getDictionaryType(), dto.getKey()) && containsValue(entity.getDictionaryType(), dto.getValue())) {
-			throw new UnsupportedOperationException(String.format(UNSUPPORTED_UPDATE_ALREADY_EXISTS_VALUES_ERROR, entity));
+		if (!dto.isActive() && entity.isActive()) {
+			log.info("Обнаружено перемещение справочника {} в архив", entity);
+		} else {
+			if (containsKey(entity.getDictionaryType(), dto.getKey()) && containsValue(entity.getDictionaryType(), dto.getValue())) {
+				throw new UnsupportedOperationException(String.format(UNSUPPORTED_UPDATE_ALREADY_EXISTS_VALUES_ERROR, entity));
+			}
 		}
-		return this.fromEntity(
-			dictionaryRepository.findById(dto.getId())
-				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
-					ENTITY_NOT_FOUND_EXCEPTION_PATTERN,
-					Dictionary.class.getSimpleName(),
-					dto.getId()
-				)))
-				.setDictionaryValue(dto.getValue())
-				.setDictionaryKey(dto.getKey())
-		);
+		return this.fromEntity(entity.setDictionaryValue(dto.getValue()).setDictionaryKey(dto.getKey()).setActive(dto.isActive()));
 	}
 
 	@Override
@@ -103,14 +109,17 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 					.dictionaryType(type)
 					.dictionaryKey(dto.getKey())
 					.dictionaryValue(dto.getValue())
+					.active(true)
+					.displayOrder(dictionaryRepository.getNextOrder(type).map(val -> val + 1).orElse(0))
 					.build()
 			)
 		);
 	}
 
 	@Override
+	@Transactional
 	public void delete(final DictionaryDto dto) {
-		dictionaryRepository.findById(dto.getId()).ifPresentOrElse(dictionaryRepository::delete, () -> {
+		dictionaryRepository.findById(dto.getId()).ifPresentOrElse(entity -> entity.setActive(false), () -> {
 			throw new EntityNotFoundException(ExceptionMessageUtils.of(
 				ENTITY_NOT_FOUND_EXCEPTION_PATTERN,
 				Dictionary.class.getSimpleName(),
@@ -124,7 +133,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryKey)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKey(dictionaryType, dictionaryKey).map(Dictionary::getDictionaryValue)
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(dictionaryType, dictionaryKey).map(Dictionary::getDictionaryValue)
 			.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
 				DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN,
 				dictionaryType,
@@ -137,7 +146,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryValue)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValue(dictionaryType, dictionaryValue)
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValueAndActiveIsTrue(dictionaryType, dictionaryValue)
 			.map(Dictionary::getDictionaryKey)
 			.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
 				DICTIONARY_KEY_NOT_FOUND_EXCEPTION_PATTERN,
@@ -151,7 +160,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryKey)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKey(dictionaryType, dictionaryKey).isPresent();
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(dictionaryType, dictionaryKey).isPresent();
 	}
 
 	@Override
@@ -159,18 +168,88 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryValue)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValue(dictionaryType, dictionaryValue).isPresent();
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValueAndActiveIsTrue(dictionaryType, dictionaryValue).isPresent();
 	}
 
-	public List<DictionaryDto> getAllByType(final AdministeredDictionaryType type) {
-		return this.fromEntity(dictionaryRepository.findAllByDictionaryType(type));
+	public List<DictionaryDto> getAllByType(final AdministeredDictionaryType type, final boolean onlyActive) {
+		return this.fromEntity(
+				dictionaryRepository.findAllByDictionaryTypeOrderByDisplayOrderDesc(type).stream()
+						.filter(dict -> dict.isActive() == onlyActive)
+						.collect(Collectors.toList())
+		);
+	}
+
+	public List<Dictionary> getAllEntitiesByType(final AdministeredDictionaryType type, final boolean onlyActive) {
+		return dictionaryRepository.findAllByDictionaryTypeOrderByDisplayOrderDesc(type).stream()
+				.filter(dict -> dict.isActive() == onlyActive)
+				.collect(Collectors.toList());
 	}
 
 	public DictionaryDto getByTypeAndKey(final AdministeredDictionaryType type, final String key) {
 		return this.fromEntity(
-			dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKey(type, key)
+			dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(type, key)
 				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN, type, key)))
 		);
+	}
+
+	public Dictionary getEntityByTypeAndKey(final AdministeredDictionaryType type, final String key) {
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(type, key)
+				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN, type, key)));
+	}
+
+	public void dictionaryEntityToDto(final Dictionary dictionary, final Consumer<DictionaryDto> consumer) {
+		Optional.ofNullable(dictionary).map(this::fromEntity).ifPresent(consumer);
+	}
+
+	@Nullable
+	public DictionaryDto dictionaryEntityToDto(final Dictionary dictionary) {
+		return Optional.ofNullable(dictionary).map(this::fromEntity).orElse(null);
+	}
+
+	public Dictionary getOneAsEntity(@NonNull final DictionaryDto dto) {
+		return Optional.ofNullable(dto.getId()).flatMap(dictionaryRepository::findById)
+				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
+						ENTITY_NOT_FOUND_EXCEPTION_PATTERN,
+						Dictionary.class.getSimpleName(),
+						dto.getId()
+				)));
+	}
+
+	public Dictionary getOneAsEntity(@NonNull final Long id) {
+		return dictionaryRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
+						ENTITY_NOT_FOUND_EXCEPTION_PATTERN,
+						Dictionary.class.getSimpleName(),
+						id
+				)));
+	}
+
+	@PostConstruct
+	public void fillSemesters() {
+		for (int i = LocalDate.now().getYear() - 10; i < LocalDate.now().getYear() + 100; i++) {
+			try {
+				this.create(
+						DictionaryDto.builder()
+								.type(AdministeredDictionaryType.SEMESTER.name())
+								.key(AUTUMN.name() + "_" + i + "_" + (i + 1))
+								.value(AUTUMN.getValue() + " " + i + "/" + (i + 1))
+								.build()
+				);
+			} catch (final Exception e) {
+				//Skip AlreadyExistsException
+			}
+			try {
+				this.create(
+						DictionaryDto.builder()
+								.type(AdministeredDictionaryType.SEMESTER.name())
+								.key(SPRING.name() + "_" + i + "_" + (i + 1))
+								.value(SPRING.getValue() + " " + i + "/" + (i + 1))
+								.build()
+				);
+			} catch (final Exception e) {
+				//Skip AlreadyExistsException
+			}
+		}
 	}
 
 }

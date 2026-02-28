@@ -1,16 +1,15 @@
 package ru.schedule.manager.business.dataholder;
 
-import java.util.List;
-
 import lombok.Data;
-
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 
+import java.util.List;
+
 @Data
-public class ProfessorDisciplineDataHolder {
+public class ScheduleDataHolder {
 
-	private List<DictionaryDto> disciplines;
+	private final DictionaryDto semester;
 
-	private DictionaryDto professor;
+	private final List<ScheduleRowDataHolder> rows;
 
 }

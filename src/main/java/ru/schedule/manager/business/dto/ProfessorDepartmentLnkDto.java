@@ -13,15 +13,11 @@ import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class ProfessorDisciplineLnkDto extends BaseResponseDto {
+public class ProfessorDepartmentLnkDto extends BaseResponseDto {
 
 	private static final long serialVersionUID = 1L;
 
-	public ProfessorDisciplineLnkDto(final Long id) {
-		this.id = id;
-	}
-
-	private DictionaryDto discipline;
+	private DictionaryDto department;
 
 	private DictionaryDto professor;
 

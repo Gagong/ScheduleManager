@@ -1,5 +1,7 @@
 package ru.schedule.manager.infrastructure.base.dictionary.administered;
 
+import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 public interface IAdministeredDictionary {

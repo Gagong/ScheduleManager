@@ -10,7 +10,6 @@ import ru.schedule.manager.business.exception.ExceptionMessageUtils;
 import ru.schedule.manager.business.repository.ProfessorDisciplineLnkRepository;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
-import ru.schedule.manager.infrastructure.base.dictionary.administered.repository.DictionaryRepository;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
@@ -28,8 +27,6 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 	private final AdministeredDictionaryService administeredDictionaryService;
 
 	private final ProfessorDisciplineLnkRepository professorDisciplineLnkRepository;
-
-	private final DictionaryRepository dictionaryRepository;
 
 	@Override
 	public ProfessorDisciplineLnkDto fromEntity(final ProfessorDisciplineLnk entity) {
@@ -71,10 +68,10 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 	@Override
 	@SneakyThrows
 	public ProfessorDisciplineLnkDto create(final ProfessorDisciplineLnkDto dto) {
-		final Dictionary professor = dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow();
-		final Dictionary discipline = dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow();
+		final Dictionary professor = administeredDictionaryService.getOneAsEntity(dto.getProfessor());
+		final Dictionary discipline = administeredDictionaryService.getOneAsEntity(dto.getDiscipline());
 		if (professorDisciplineLnkRepository.findByProfessorAndDiscipline(professor, discipline).isPresent()) {
-			throw new IllegalAccessException("Запись с такими параметрами уже существует");
+			return dto;
 		}
 		return this.fromEntity(
 			professorDisciplineLnkRepository.save(
@@ -100,7 +97,7 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 	public List<ProfessorDisciplineLnkDto> getProfessorDisciplines(final DictionaryDto professor) {
 		return this.fromEntity(
 			professorDisciplineLnkRepository.findByProfessor(
-				dictionaryRepository.findById(professor.getId()).orElseThrow()
+				administeredDictionaryService.getOneAsEntity(professor)
 			)
 		);
 	}

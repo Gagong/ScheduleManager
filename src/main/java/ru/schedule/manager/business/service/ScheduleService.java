@@ -1,29 +1,32 @@
 package ru.schedule.manager.business.service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.apache.commons.lang3.ObjectUtils;
-import ru.schedule.manager.business.dictionary.Times;
+import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
 import ru.schedule.manager.business.dto.ScheduleItemDto;
 import ru.schedule.manager.business.entity.ScheduleItem;
 import ru.schedule.manager.business.exception.EntityNotFoundException;
 import ru.schedule.manager.business.exception.ExceptionMessageUtils;
 import ru.schedule.manager.business.repository.ScheduleItemRepository;
-import ru.schedule.manager.infrastructure.base.dictionary.administered.repository.DictionaryRepository;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
+import static ru.schedule.manager.business.dictionary.SemesterType.AUTUMN;
+import static ru.schedule.manager.business.dictionary.SemesterType.SPRING;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
+import static ru.schedule.manager.business.utils.DateTimeUtils.isAfterOrEquals;
+import static ru.schedule.manager.business.utils.DateTimeUtils.isBeforeOrEquals;
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +36,20 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 
 	private final ScheduleItemRepository scheduleItemRepository;
 
-	private final DictionaryRepository dictionaryRepository;
-
 	@Override
 	public ScheduleItemDto fromEntity(final ScheduleItem entity) {
-		final ScheduleItemDto.ScheduleItemDtoBuilder builder = ScheduleItemDto.builder();
-		Optional.ofNullable(entity.getProfessor()).map(administeredDictionaryService::fromEntity).ifPresent(builder::professor);
-		Optional.ofNullable(entity.getDiscipline()).map(administeredDictionaryService::fromEntity).ifPresent(builder::discipline);
-		Optional.ofNullable(entity.getClassroom()).map(administeredDictionaryService::fromEntity).ifPresent(builder::classroom);
-		Optional.ofNullable(entity.getDisciplineType()).map(administeredDictionaryService::fromEntity).ifPresent(builder::disciplineType);
-		return (ScheduleItemDto) builder
+		return ScheduleItemDto.builder()
+			.professor(administeredDictionaryService.dictionaryEntityToDto(entity.getProfessor()))
+			.discipline(administeredDictionaryService.dictionaryEntityToDto(entity.getDiscipline()))
+			.classroom(administeredDictionaryService.dictionaryEntityToDto(entity.getClassroom()))
+			.disciplineType(administeredDictionaryService.dictionaryEntityToDto(entity.getDisciplineType()))
+			.times(administeredDictionaryService.dictionaryEntityToDto(entity.getTimes()))
+			.faculty(administeredDictionaryService.dictionaryEntityToDto(entity.getFaculty()))
+			.group(administeredDictionaryService.dictionaryEntityToDto(entity.getGroup()))
+			.subgroup(administeredDictionaryService.dictionaryEntityToDto(entity.getSubgroup()))
+			.semester(administeredDictionaryService.dictionaryEntityToDto(entity.getSemester()))
 			.row(entity.getRow())
 			.col(entity.getCol())
-			.times(entity.getTimes())
 			.value(entity.getValue())
 			.id(entity.getId())
 			.createdDateTime(entity.getCreatedDateTime())
@@ -58,7 +62,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		return entities.stream()
 			.filter(Objects::nonNull)
 			.map(this::fromEntity)
-			.sorted(Comparator.comparing(value -> value.getTimes().ordinal()))
+			.sorted(Comparator.comparing(value -> value.getTimes().getDisplayOrder()))
 			.collect(Collectors.toList());
 	}
 
@@ -80,10 +84,14 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		return this.fromEntity(
 			scheduleItemRepository.findById(dto.getId())
 				.orElseThrow()
-				.setClassroom(dictionaryRepository.findById(dto.getClassroom().getId()).orElseThrow())
-				.setDiscipline(dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow())
-				.setProfessor(dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow())
-				.setDisciplineType(dictionaryRepository.findById(dto.getDisciplineType().getId()).orElseThrow())
+				.setClassroom(administeredDictionaryService.getOneAsEntity(dto.getClassroom()))
+				.setDiscipline(administeredDictionaryService.getOneAsEntity(dto.getDiscipline()))
+				.setProfessor(administeredDictionaryService.getOneAsEntity(dto.getProfessor()))
+				.setDisciplineType(administeredDictionaryService.getOneAsEntity(dto.getDisciplineType()))
+				.setFaculty(administeredDictionaryService.getOneAsEntity(dto.getFaculty()))
+				.setGroup(administeredDictionaryService.getOneAsEntity(dto.getGroup()))
+				.setSubgroup(administeredDictionaryService.getOneAsEntity(dto.getSubgroup()))
+				.setSemester(administeredDictionaryService.getOneAsEntity(dto.getSemester()))
 		);
 	}
 
@@ -95,13 +103,17 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		return this.fromEntity(
 			scheduleItemRepository.save(
 				ScheduleItem.builder()
-					.classroom(dictionaryRepository.findById(dto.getClassroom().getId()).orElseThrow())
-					.discipline(dictionaryRepository.findById(dto.getDiscipline().getId()).orElseThrow())
-					.disciplineType(dictionaryRepository.findById(dto.getDisciplineType().getId()).orElseThrow())
-					.professor(dictionaryRepository.findById(dto.getProfessor().getId()).orElseThrow())
+					.classroom(administeredDictionaryService.getOneAsEntity(dto.getClassroom()))
+					.discipline(administeredDictionaryService.getOneAsEntity(dto.getDiscipline()))
+					.disciplineType(administeredDictionaryService.getOneAsEntity(dto.getDisciplineType()))
+					.professor(administeredDictionaryService.getOneAsEntity(dto.getProfessor()))
+					.times(administeredDictionaryService.getOneAsEntity(dto.getTimes()))
+					.faculty(administeredDictionaryService.getOneAsEntity(dto.getFaculty()))
+					.group(administeredDictionaryService.getOneAsEntity(dto.getGroup()))
+					.subgroup(administeredDictionaryService.getOneAsEntity(dto.getSubgroup()))
+					.semester(administeredDictionaryService.getOneAsEntity(dto.getSemester()))
 					.row(dto.getRow())
 					.col(dto.getCol())
-					.times(dto.getTimes())
 					.build()
 			)
 		);
@@ -118,21 +130,69 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		});
 	}
 
-	public ScheduleItemDto findByRowAndColAndTimes(final Integer row, final Integer col, final Times times) {
-		final Long lastId = scheduleItemRepository.getMaxId();
+	public ScheduleItemDto findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubGroup(final Integer row,
+																						   final Integer col,
+																						   final Dictionary times,
+																						   final Dictionary semester,
+																						   final Dictionary faculty,
+																						   final Dictionary group,
+																						   final Dictionary subgroup,
+																						   final boolean editable) {
+		final Long lastId = scheduleItemRepository.getMaxId().orElse(0L);
 		return this.fromEntity(
-			scheduleItemRepository.findByRowAndColAndTimes(row, col, times)
+			scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(row, col, times, semester, faculty, group, subgroup)
 				.orElseGet(() -> ScheduleItem.builder()
-					.id(ThreadLocalRandom.current().nextLong(lastId + 1L, lastId + 10000L))
+					.id(ThreadLocalRandom.current().nextLong(lastId + 1000000L, lastId + 10000000L))
+					.semester(semester)
+					.faculty(faculty)
+					.group(group)
+					.subgroup(subgroup)
 					.row(row)
 					.col(col)
 					.times(times)
-					.build())
+					.build()
+				).setEditable(editable)
+		);
+	}
+
+	public ScheduleItemDto findByRowAndColAndTimesAndSemesterAndProfessor(final Integer row,
+																						   final Integer col,
+																						   final Dictionary times,
+																						   final Dictionary semester,
+																						   final Dictionary professor,
+																						   final boolean editable) {
+		final Long lastId = scheduleItemRepository.getMaxId().orElse(0L);
+		return this.fromEntity(
+				scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndProfessor(row, col, times, semester, professor)
+						.orElseGet(() -> ScheduleItem.builder()
+								.id(ThreadLocalRandom.current().nextLong(lastId + 1000000L, lastId + 10000000L))
+								.semester(semester)
+								.professor(professor)
+								.row(row)
+								.col(col)
+								.times(times)
+								.build()
+						).setEditable(editable)
 		);
 	}
 
 	public boolean isPresent(final ScheduleItemDto dto) {
 		return scheduleItemRepository.existsById(dto.getId());
+	}
+
+	/**
+	 * Сентябрь - декабрь = Осенний семестр ${year}/${year} + 1
+	 * Январь - август = Весенний семестр ${year} - 1/${year}
+	 */
+	public Dictionary getCurrentSemester() {
+		final LocalDate date =  LocalDate.now();
+		final LocalDate firstDayOfSeptember = LocalDate.of(date.getYear(), Month.SEPTEMBER, 1);
+		final LocalDate lastDayOfDecember = LocalDate.of(date.getYear(), Month.DECEMBER, 31);
+		if (isAfterOrEquals(date, firstDayOfSeptember) && isBeforeOrEquals(date, lastDayOfDecember)) {
+			return administeredDictionaryService.getEntityByTypeAndKey(AdministeredDictionaryType.SEMESTER, AUTUMN.name() + "_" + date.getYear() + "_" + (date.getYear() + 1));
+		} else {
+			return administeredDictionaryService.getEntityByTypeAndKey(AdministeredDictionaryType.SEMESTER, SPRING.name() + "_" + (date.getYear() - 1) + "_" + date.getYear());
+		}
 	}
 
 }
