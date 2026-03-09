@@ -2,6 +2,7 @@ package ru.schedule.manager.business.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ public class ProfessorController {
 		return professorDisciplineService.getProfessorDisciplines(professor);
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("addProfessorDiscipline")
 	public void addProfessorDiscipline(@RequestBody final AddProfessorDisciplinesRequest data) {
 		data.getDisciplines().stream()
@@ -42,6 +44,7 @@ public class ProfessorController {
 			.forEach(professorDisciplineService::create);
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@DeleteMapping("deleteProfessorDiscipline")
 	public void deleteProfessorDiscipline(@RequestParam final Long id) {
 		professorDisciplineService.delete(new ProfessorDisciplineLnkDto(id));
@@ -59,6 +62,7 @@ public class ProfessorController {
 				.collect(Collectors.toList());
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("updateDepartment")
 	public ProfessorDepartmentLnkDto updateDepartment(@RequestBody final ProfessorDepartmentLnkDto dto) {
 		return professorDepartmentService.create(dto);

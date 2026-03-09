@@ -1,12 +1,14 @@
 package ru.schedule.manager.infrastructure.base.serializer;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.springframework.stereotype.Component;
 import ru.schedule.manager.infrastructure.base.dictionary.SimpleDictionary;
 
+import java.io.IOException;
+
+@Component
 public class BaseDictionarySerializer extends JsonSerializer<SimpleDictionary> {
 
 	@Override

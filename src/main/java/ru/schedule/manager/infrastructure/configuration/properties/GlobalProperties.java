@@ -1,10 +1,10 @@
 package ru.schedule.manager.infrastructure.configuration.properties;
 
+import lombok.experimental.UtilityClass;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class GlobalProperties {

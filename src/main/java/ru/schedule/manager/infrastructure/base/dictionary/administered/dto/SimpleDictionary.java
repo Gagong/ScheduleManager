@@ -1,9 +1,9 @@
 package ru.schedule.manager.infrastructure.base.dictionary.administered.dto;
 
-import java.io.Serializable;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.io.Serializable;
 
 @Getter
 @RequiredArgsConstructor

@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -70,6 +71,19 @@ public class WebSecurityConfiguration {
 						"/v3/api-docs/**",
 						"/swagger-resources/**",
 						"/webjars/**"
+				).permitAll()
+				.antMatchers(HttpMethod.GET,
+						"/api/dictionary/**",
+						"/api/schedule/**",
+						"/api/professor/**",
+						"/api/profile/**"
+				).permitAll()
+				.antMatchers(HttpMethod.POST,
+						"/api/schedule/getSchedule",
+						"/api/schedule/getFreeClassRoomsAndProfessors",
+						"/api/professor/getProfessorDisciplines",
+						"/api/professor/getProfessorDepartment",
+						"/api/professor/getDepartmentProfessors"
 				).permitAll()
 				.anyRequest()
 				.fullyAuthenticated()

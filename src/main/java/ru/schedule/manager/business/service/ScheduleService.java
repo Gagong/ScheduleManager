@@ -10,6 +10,7 @@ import ru.schedule.manager.business.entity.ScheduleItem;
 import ru.schedule.manager.business.exception.EntityNotFoundException;
 import ru.schedule.manager.business.exception.ExceptionMessageUtils;
 import ru.schedule.manager.business.repository.ScheduleItemRepository;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
@@ -18,15 +19,19 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static ru.schedule.manager.business.dictionary.AdministeredDictionaryType.CLASSROOM;
+import static ru.schedule.manager.business.dictionary.AdministeredDictionaryType.PROFESSOR;
 import static ru.schedule.manager.business.dictionary.SemesterType.AUTUMN;
 import static ru.schedule.manager.business.dictionary.SemesterType.SPRING;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
 import static ru.schedule.manager.business.utils.DateTimeUtils.isAfterOrEquals;
 import static ru.schedule.manager.business.utils.DateTimeUtils.isBeforeOrEquals;
+import static ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary.defaultSubgroup;
 
 @Service
 @RequiredArgsConstructor
@@ -140,18 +145,19 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 																						   final boolean editable) {
 		final Long lastId = scheduleItemRepository.getMaxId().orElse(0L);
 		return this.fromEntity(
-			scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(row, col, times, semester, faculty, group, subgroup)
-				.orElseGet(() -> ScheduleItem.builder()
-					.id(ThreadLocalRandom.current().nextLong(lastId + 1000000L, lastId + 10000000L))
-					.semester(semester)
-					.faculty(faculty)
-					.group(group)
-					.subgroup(subgroup)
-					.row(row)
-					.col(col)
-					.times(times)
-					.build()
-				).setEditable(editable)
+				scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(row, col, times, semester, faculty, group, subgroup)
+						.or(() -> scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(row, col, times, semester, faculty, group, defaultSubgroup()))
+						.orElseGet(() -> ScheduleItem.builder()
+								.id(ThreadLocalRandom.current().nextLong(lastId + 1000000L, lastId + 10000000L))
+								.semester(semester)
+								.faculty(faculty)
+								.group(group)
+								.subgroup(subgroup)
+								.row(row)
+								.col(col)
+								.times(times)
+								.build()
+						).setEditable(editable)
 		);
 	}
 
@@ -193,6 +199,31 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		} else {
 			return administeredDictionaryService.getEntityByTypeAndKey(AdministeredDictionaryType.SEMESTER, SPRING.name() + "_" + (date.getYear() - 1) + "_" + date.getYear());
 		}
+	}
+
+	public Map<AdministeredDictionaryType, List<DictionaryDto>> getFreeClassRoomsAndProfessors(final ScheduleItemDto item) {
+		final List<DictionaryDto> allClassRooms = administeredDictionaryService.getAllByType(CLASSROOM, true);
+		final List<DictionaryDto> allProfessors = administeredDictionaryService.getAllByType(PROFESSOR, true);
+		final List<ScheduleItem> getFilledSchedule = scheduleItemRepository.findAllByRowAndColAndTimesAndSemesterAndClassroomIsNotNullAndProfessorIsNotNull(
+				item.getRow(),
+				item.getCol(),
+				administeredDictionaryService.getOneAsEntity(item.getTimes()),
+				administeredDictionaryService.getOneAsEntity(item.getSemester())
+		);
+		final List<DictionaryDto> busyClassRooms = getFilledSchedule.stream()
+				.map(ScheduleItem::getClassroom)
+				.map(administeredDictionaryService::fromEntity)
+				.collect(Collectors.toList());
+		final List<DictionaryDto> busyProfessors = getFilledSchedule.stream()
+				.map(ScheduleItem::getProfessor)
+				.map(administeredDictionaryService::fromEntity)
+				.collect(Collectors.toList());
+		allClassRooms.removeIf(busyClassRooms::contains);
+		allProfessors.removeIf(busyProfessors::contains);
+		return Map.of(
+				CLASSROOM, allClassRooms,
+				PROFESSOR, allProfessors
+		);
 	}
 
 }

@@ -1,66 +1,63 @@
 import axios from 'axios'
 import store from '../store/store'
+import mitt from 'mitt'
 
-export const LOGIN_API = axios.create({
-	baseURL: `http://localhost:8081/api/login`,
+export const emitter = mitt()
+
+const baseConfig = {
+	baseURL: process.env.VUE_APP_API_URL || 'http://localhost:8081/api',
 	headers: {
-		'Access-Control-Allow-Origin': 'http://localhost:8080'
+		'Content-Type': 'application/json',
+		'Accept': 'application/json'
 	}
-})
+}
 
-LOGIN_API.interceptors.request.use(
-	successConfig(),
-	errorConfig()
-);
+function createApiInstance(endpoint) {
+	const instance = axios.create({
+		...baseConfig,
+		baseURL: baseConfig.baseURL + endpoint
+	})
 
-export const DICTIONARY_API = axios.create({
-	baseURL: `http://localhost:8081/api/dictionary`,
-	headers: {
-		'Access-Control-Allow-Origin': 'http://localhost:8080'
-	}
-})
-
-DICTIONARY_API.interceptors.request.use(
-	successConfig(),
-	errorConfig()
-);
-
-export const SCHEDULE_API = axios.create({
-	baseURL: `http://localhost:8081/api/schedule`,
-	headers: {
-		'Access-Control-Allow-Origin': 'http://localhost:8080'
-	}
-})
-
-SCHEDULE_API.interceptors.request.use(
-	successConfig(),
-	errorConfig()
-);
-
-export const PROFESSOR_API = axios.create({
-	baseURL: `http://localhost:8081/api/professor`,
-	headers: {
-		'Access-Control-Allow-Origin': 'http://localhost:8080'
-	}
-})
-
-PROFESSOR_API.interceptors.request.use(
-	successConfig(),
-	errorConfig()
-);
-
-function successConfig() {
-	return (config) => {
-		const token = store.getters.getAuthHeader;
-		if (token) {
-			config.headers.Authorization = token;
+	instance.interceptors.request.use(
+		(config) => {
+			const token = store.getters.getAuthHeader
+			if (token) {
+				config.headers.Authorization = token
+			}
+			return config
+		},
+		(error) => {
+			emitter.emit('api-error', {
+				message: error.message,
+				type: 'request'
+			})
+			return Promise.reject(error)
 		}
-		return config;
-	};
+	)
+
+	instance.interceptors.response.use(
+		(response) => response,
+		(error) => {
+			const errorInfo = {
+				status: error.response?.status,
+				statusText: error.response?.statusText,
+				message: error.response?.data?.message || error.message,
+				url: error.config?.url,
+				method: error.config?.method?.toUpperCase(),
+				timestamp: new Date().toISOString(),
+				data: error.response?.data
+			}
+
+			emitter.emit('api-error', errorInfo)
+			return Promise.reject(error)
+		}
+	)
+
+	return instance
 }
 
-function errorConfig() {
-	return (error) => {
-		return Promise.reject(error);
-	};
-}
+export const LOGIN_API = createApiInstance('/login')
+export const DICTIONARY_API = createApiInstance('/dictionary')
+export const SCHEDULE_API = createApiInstance('/schedule')
+export const PROFESSOR_API = createApiInstance('/professor')
+export const PROFILE_API = createApiInstance('/profile')

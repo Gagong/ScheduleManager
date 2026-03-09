@@ -6,7 +6,7 @@
           <v-row dense class="text-center justify-center">
             <v-col dense cols="12">
               <h2 class="text-h4 font-weight-bold">
-                Менеджер расписания
+                Расписание ИГЭУ
               </h2>
             </v-col>
           </v-row>

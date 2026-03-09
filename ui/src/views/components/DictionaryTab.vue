@@ -116,9 +116,6 @@ export default {
       }
       DICTIONARY_API.patch('update', dto).then(() => {
         this.fetchDictionaryTable()
-      }).catch(e => {
-        console.log(e)
-        alert(e.response.data.message)
       })
     },
 		addNewDictionaryValue() {
@@ -131,9 +128,6 @@ export default {
 				this.fetchDictionaryTable()
 				this.key = null;
 				this.value = null;
-			}).catch(e => {
-				console.log(e)
-				alert(e.response.data.message)
 			})
 		},
 		updateDictionaryValue() {
@@ -142,9 +136,6 @@ export default {
 				this.blocked = true;
 				this.key = null;
 				this.value = null;
-			}).catch(e => {
-				console.log(e)
-				alert(e.response.data.message)
 			})
 		},
 		updateValue(event, data) {
@@ -158,9 +149,6 @@ export default {
 				}
 			}).then(resp => {
 				this.items = resp.data
-			}).catch(e => {
-				console.log(e)
-				alert(e.response.data.message)
 			}).then(() => DICTIONARY_API.get('getAllByType', {
         params: {
           type: this.dictionary.key,
@@ -168,9 +156,6 @@ export default {
         }
       }).then(resp => {
         this.archiveItems = resp.data
-      }).catch(e => {
-        console.log(e)
-        alert(e.response.data.message)
       }))
 		}
 	},

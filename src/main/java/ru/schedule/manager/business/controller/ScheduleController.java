@@ -3,7 +3,9 @@ package ru.schedule.manager.business.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,7 @@ import ru.schedule.manager.business.dto.ScheduleItemDto;
 import ru.schedule.manager.business.entity.ScheduleItem;
 import ru.schedule.manager.business.request.GetScheduleRequest;
 import ru.schedule.manager.business.service.ScheduleService;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
 
@@ -28,6 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary.defaultSubgroup;
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 
 @Slf4j
@@ -46,7 +50,8 @@ public class ScheduleController {
 		final Map<Integer, Dictionary> times = administeredDictionaryService.getAllEntitiesByType(AdministeredDictionaryType.LESSON_TIME, true)
 				.stream()
 				.collect(Collectors.toMap(Dictionary::getDisplayOrder, Function.identity()));
-		if (ObjectUtils.allNotNull(request.getSemester(), request.getFaculty(), request.getGroup(), request.getSubgroup())) {
+		final DictionaryDto subgroup = ObjectUtils.firstNonNull(request.getSubgroup(), administeredDictionaryService.fromEntity(defaultSubgroup()));
+		if (ObjectUtils.allNotNull(request.getSemester(), request.getFaculty(), request.getGroup(), subgroup)) {
 			final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
 			for (int r = 0; r < 2; r++) {
 				final ScheduleRowDataHolder scheduleRowDataHolder = new ScheduleRowDataHolder(new LinkedList<>());
@@ -61,7 +66,7 @@ public class ScheduleController {
 										administeredDictionaryService.getOneAsEntity(request.getSemester()),
 										administeredDictionaryService.getOneAsEntity(request.getFaculty()),
 										administeredDictionaryService.getOneAsEntity(request.getGroup()),
-										administeredDictionaryService.getOneAsEntity(request.getSubgroup()),
+										administeredDictionaryService.getOneAsEntity(subgroup),
 										editable
 								)
 						);
@@ -132,7 +137,18 @@ public class ScheduleController {
 		}
 	}
 
+	@PostMapping("getFreeClassRoomsAndProfessors")
+	public Map<AdministeredDictionaryType, List<DictionaryDto>> getFreeClassRoomsAndProfessors(@RequestBody final ScheduleItemDto item) {
+		return scheduleService.getFreeClassRoomsAndProfessors(item);
+	}
+
+	@GetMapping("getCurrentSemester")
+	public DictionaryDto getCurrentSemester() {
+		return administeredDictionaryService.fromEntity(scheduleService.getCurrentSemester());
+	}
+
 	@PostMapping("save")
+	@PreAuthorize("isAuthenticated()")
 	public void save(@RequestBody final List<ScheduleRowDataHolder> rows) {
 		for (final ScheduleRowDataHolder row : rows) {
 			for (final ScheduleColDataHolder col : row.getCols()) {
@@ -148,6 +164,7 @@ public class ScheduleController {
 	}
 
 	@DeleteMapping("delete/{id}")
+	@PreAuthorize("isAuthenticated()")
 	public void delete(@PathVariable final Long id) {
 		scheduleService.delete(ScheduleItemDto.builder().id(id).build());
 	}

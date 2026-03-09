@@ -10,8 +10,10 @@ import getRowColor, {
   WEDNESDAY
 } from "@/constants/constants";
 import {DICTIONARY_API, PROFESSOR_API, SCHEDULE_API} from "@/axios/axios";
+import Navigator from "@/views/components/Navigator.vue";
 
 export default {
+  components: {Navigator},
 	name: 'GeneralSchedule',
 	data: () => ({
 		monday: MONDAY,
@@ -51,9 +53,6 @@ export default {
       this.subgroups = resp.data.SUBGROUP
       this.departments = resp.data.DEPARTMENT
       this.professors = resp.data.PROFESSOR
-    }).catch(e => {
-      console.log(e)
-      alert(e.response.data.message)
     }).then(() => SCHEDULE_API.post(
         'getSchedule',
         {},
@@ -65,9 +64,6 @@ export default {
     ).then(resp => {
       this.items = resp.data.rows
       this.semester = resp.data.semester
-    }).catch(e => {
-      console.log(e)
-      alert(e.response.data.message)
     }))
 	},
   methods: {
@@ -84,9 +80,6 @@ export default {
       ).then(resp => {
         this.items = resp.data.rows
         this.semester = resp.data.semester
-      }).catch(e => {
-        console.log(e)
-        alert(e.response.data.message)
       })
     },
     getFilledSchedule() {
@@ -107,10 +100,7 @@ export default {
               }
           ).then(resp => {
             this.items = resp.data.rows
-            this.semester = resp.data.semester
-          }).catch(e => {
-            console.log(e)
-            alert(e.response.data.message)
+            //this.semester = resp.data.semester
           })
         }
       } else {
@@ -128,10 +118,7 @@ export default {
               }
           ).then(resp => {
             this.items = resp.data.rows
-            this.semester = resp.data.semester
-          }).catch(e => {
-            console.log(e)
-            alert(e.response.data.message)
+            //this.semester = resp.data.semester
           })
         }
       }
@@ -150,8 +137,8 @@ export default {
       }
       this.getSchedule();
     },
-    semester(value) {
-      if (value) {
+    semester(value, oldValue) {
+      if (value && value !== oldValue) {
         this.getFilledSchedule()
       }
     },
@@ -173,11 +160,10 @@ export default {
     department(value) {
       if (value) {
         PROFESSOR_API.post('getDepartmentProfessors', value).then(resp => {
-          this.professor = null
-          this.professors = resp.data
-        }).catch(e => {
-          console.log(e)
-          alert(e.response.data.message)
+          if (resp.data?.length > 0) {
+            this.professor = null
+            this.professors = resp.data
+          }
         })
       } else {
         DICTIONARY_API.get('getAllByType', {
@@ -186,9 +172,6 @@ export default {
           }
         }).then(resp => {
           this.professors = resp.data
-        }).catch(e => {
-          console.log(e)
-          alert(e.response.data.message)
         })
       }
     },
@@ -202,309 +185,312 @@ export default {
 </script>
 
 <template>
-	<v-card>
-		<v-card-title>Расписание: {{semester !== null ? semester.value : ""}}</v-card-title>
-		<v-card-text>
-      <!--Форма поиска-->
-      <div>
-        <v-row>
-          <v-col cols="12">
-            <v-radio-group row mandatory v-model="typeSelector">
-              <template v-slot:label>
-                <div>Режим отображения расписания:</div>
-              </template>
-              <v-radio label="Студента" color="indigo darken-3" value="student"/>
-              <v-radio label="Преподавателя" color="indigo darken-3" value="professor"/>
-            </v-radio-group>
-          </v-col>
-          <v-row v-if="typeSelector === 'student'">
-            <v-col cols="4">
-              <v-autocomplete
-                  v-model="semester"
-                  :items="semesters"
-                  :rules="[rules.required]"
-                  dense
-                  hide-details
-                  item-text="value"
-                  item-value="id"
-                  label="Выберите семестр"
-                  no-data-text="Нет данных"
-                  outlined
-                  return-object/>
+	<v-container fluid>
+    <Navigator/>
+    <v-card>
+      <v-card-title>{{semester !== null ? semester.value : ""}}</v-card-title>
+      <v-card-text>
+        <!--Форма поиска-->
+        <div>
+          <v-row>
+            <v-col cols="12">
+              <v-radio-group row mandatory v-model="typeSelector">
+                <template v-slot:label>
+                  <div>Режим отображения расписания:</div>
+                </template>
+                <v-radio label="Студента" color="indigo darken-3" value="student"/>
+                <v-radio label="Преподавателя" color="indigo darken-3" value="professor"/>
+              </v-radio-group>
             </v-col>
-            <v-col cols="4">
-              <v-autocomplete
-                  v-model="faculty"
-                  :items="faculties"
-                  :rules="[rules.required]"
-                  dense
-                  hide-details
-                  item-text="value"
-                  item-value="id"
-                  label="Выберите факультет"
-                  no-data-text="Нет данных"
-                  outlined
-                  return-object/>
+            <v-row v-if="typeSelector === 'student'">
+              <v-col cols="4">
+                <v-autocomplete
+                    v-model="semester"
+                    :items="semesters"
+                    :rules="[rules.required]"
+                    dense
+                    hide-details
+                    item-text="value"
+                    item-value="id"
+                    label="Выберите семестр"
+                    no-data-text="Нет данных"
+                    outlined
+                    return-object/>
+              </v-col>
+              <v-col cols="4">
+                <v-autocomplete
+                    v-model="faculty"
+                    :items="faculties"
+                    :rules="[rules.required]"
+                    dense
+                    hide-details
+                    item-text="value"
+                    item-value="id"
+                    label="Выберите факультет"
+                    no-data-text="Нет данных"
+                    outlined
+                    return-object/>
+              </v-col>
+              <v-col cols="2">
+                <v-autocomplete
+                    v-model="group"
+                    :items="groups"
+                    :rules="[rules.required]"
+                    dense
+                    hide-details
+                    item-text="value"
+                    item-value="id"
+                    label="Выберите группу"
+                    no-data-text="Нет данных"
+                    outlined
+                    return-object/>
+              </v-col>
+              <v-col cols="2">
+                <v-autocomplete
+                    v-model="subgroup"
+                    :items="subgroups"
+                    :rules="[rules.required]"
+                    dense
+                    hide-details
+                    item-text="value"
+                    item-value="id"
+                    label="Выберите подгруппу"
+                    no-data-text="Нет данных"
+                    outlined
+                    return-object/>
+              </v-col>
+            </v-row>
+            <v-row v-else>
+              <v-col cols="6">
+                <v-autocomplete
+                    v-model="department"
+                    :items="departments"
+                    :rules="[rules.required]"
+                    dense
+                    hide-details
+                    item-text="value"
+                    item-value="id"
+                    label="Выберите подразделение"
+                    no-data-text="Нет данных"
+                    outlined
+                    clearable
+                    return-object/>
+              </v-col>
+              <v-col cols="6">
+                <v-autocomplete
+                    v-model="professor"
+                    :items="professors"
+                    :rules="[rules.required]"
+                    dense
+                    hide-details
+                    item-text="value"
+                    item-value="id"
+                    label="Выберите преподавателя"
+                    no-data-text="Нет данных"
+                    outlined
+                    return-object/>
+              </v-col>
+            </v-row>
+          </v-row>
+        </div>
+        <!--Расписание-->
+        <div v-if="this.items != null && this.items !== 'undefined' && this.items.length !== 0">
+          <br/>
+          <h3 style="text-align: center">Первая неделя</h3>
+          <br/>
+          <v-row>
+            <v-col cols="1">
+              <v-row>
+                <v-col cols="12">
+                  <v-data-table
+                      :headers="time"
+                      :items="times"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="time"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
-            <v-col cols="2">
-              <v-autocomplete
-                  v-model="group"
-                  :items="groups"
-                  :rules="[rules.required]"
-                  dense
-                  hide-details
-                  item-text="value"
-                  item-value="id"
-                  label="Выберите группу"
-                  no-data-text="Нет данных"
-                  outlined
-                  return-object/>
-            </v-col>
-            <v-col cols="2">
-              <v-autocomplete
-                  v-model="subgroup"
-                  :items="subgroups"
-                  :rules="[rules.required]"
-                  dense
-                  hide-details
-                  item-text="value"
-                  item-value="id"
-                  label="Выберите подгруппу"
-                  no-data-text="Нет данных"
-                  outlined
-                  return-object/>
+            <v-col cols="11">
+              <v-row>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="monday"
+                      :item-class="getRowColor"
+                      :items="items[0].cols[0].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="tuesday"
+                      :item-class="getRowColor"
+                      :items="items[0].cols[1].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="wednesday"
+                      :item-class="getRowColor"
+                      :items="items[0].cols[2].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="thursday"
+                      :item-class="getRowColor"
+                      :items="items[0].cols[3].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="friday"
+                      :item-class="getRowColor"
+                      :items="items[0].cols[4].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="saturday"
+                      :item-class="getRowColor"
+                      :items="items[0].cols[5].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
-          <v-row v-else>
-            <v-col cols="6">
-              <v-autocomplete
-                  v-model="department"
-                  :items="departments"
-                  :rules="[rules.required]"
-                  dense
-                  hide-details
-                  item-text="value"
-                  item-value="id"
-                  label="Выберите подразделение"
-                  no-data-text="Нет данных"
-                  outlined
-                  clearable
-                  return-object/>
+          <br/>
+          <h3 style="text-align: center">Вторая неделя</h3>
+          <br/>
+          <v-row>
+            <v-col cols="1">
+              <v-row>
+                <v-col cols="12">
+                  <v-data-table
+                      :headers="time"
+                      :items="times"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="time"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
-            <v-col cols="6">
-              <v-autocomplete
-                  v-model="professor"
-                  :items="professors"
-                  :rules="[rules.required]"
-                  dense
-                  hide-details
-                  item-text="value"
-                  item-value="id"
-                  label="Выберите преподавателя"
-                  no-data-text="Нет данных"
-                  outlined
-                  return-object/>
+            <v-col cols="11">
+              <v-row>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="monday"
+                      :item-class="getRowColor"
+                      :items="items[1].cols[0].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="tuesday"
+                      :item-class="getRowColor"
+                      :items="items[1].cols[1].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="wednesday"
+                      :item-class="getRowColor"
+                      :items="items[1].cols[2].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="thursday"
+                      :item-class="getRowColor"
+                      :items="items[1].cols[3].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="friday"
+                      :item-class="getRowColor"
+                      :items="items[1].cols[4].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-data-table
+                      :headers="saturday"
+                      :item-class="getRowColor"
+                      :items="items[1].cols[5].items"
+                      class="elevation-1 custom-table"
+                      dense
+                      hide-default-footer
+                      item-key="id"
+                      no-data-text="Данные отсутствуют"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
-        </v-row>
-      </div>
-      <!--Расписание-->
-			<div v-if="this.items != null && this.items !== 'undefined' && this.items.length !== 0">
-        <br/>
-        <h3 style="text-align: center">Первая неделя</h3>
-        <br/>
-        <v-row>
-          <v-col cols="1">
-            <v-row>
-              <v-col cols="12">
-                <v-data-table
-                    :headers="time"
-                    :items="times"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="time"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="11">
-            <v-row>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="monday"
-                    :item-class="getRowColor"
-                    :items="items[0].cols[0].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="tuesday"
-                    :item-class="getRowColor"
-                    :items="items[0].cols[1].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="wednesday"
-                    :item-class="getRowColor"
-                    :items="items[0].cols[2].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="thursday"
-                    :item-class="getRowColor"
-                    :items="items[0].cols[3].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="friday"
-                    :item-class="getRowColor"
-                    :items="items[0].cols[4].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="saturday"
-                    :item-class="getRowColor"
-                    :items="items[0].cols[5].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-        <br/>
-        <h3 style="text-align: center">Вторая неделя</h3>
-        <br/>
-        <v-row>
-          <v-col cols="1">
-            <v-row>
-              <v-col cols="12">
-                <v-data-table
-                    :headers="time"
-                    :items="times"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="time"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="11">
-            <v-row>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="monday"
-                    :item-class="getRowColor"
-                    :items="items[1].cols[0].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="tuesday"
-                    :item-class="getRowColor"
-                    :items="items[1].cols[1].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="wednesday"
-                    :item-class="getRowColor"
-                    :items="items[1].cols[2].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="thursday"
-                    :item-class="getRowColor"
-                    :items="items[1].cols[3].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="friday"
-                    :item-class="getRowColor"
-                    :items="items[1].cols[4].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-data-table
-                    :headers="saturday"
-                    :item-class="getRowColor"
-                    :items="items[1].cols[5].items"
-                    class="elevation-1 custom-table"
-                    dense
-                    hide-default-footer
-                    item-key="id"
-                    no-data-text="Данные отсутствуют"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-      </div>
-		</v-card-text>
-	</v-card>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <style lang="css" scoped>

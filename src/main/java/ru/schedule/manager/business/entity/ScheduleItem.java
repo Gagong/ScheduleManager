@@ -21,8 +21,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary.defaultSubgroup;
+import static ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary.isNotDefaultDictionary;
 
 @Getter
 @Setter
@@ -73,12 +77,11 @@ public class ScheduleItem extends BaseEntity {
 	@JoinColumn(name = "student_group", nullable = false)
 	private Dictionary group;
 
-
+	@Builder.Default
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonSerialize(using = BaseEntitySerializer.class)
 	@JoinColumn(name = "subgroup", nullable = false)
-	private Dictionary subgroup;
-
+	private Dictionary subgroup = defaultSubgroup();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonSerialize(using = BaseEntitySerializer.class)
@@ -105,7 +108,12 @@ public class ScheduleItem extends BaseEntity {
 			professor,
 			disciplineType,
 			discipline
-		).map(Dictionary::getDictionaryValue).collect(Collectors.joining(", "));
+		).map(Dictionary::getDictionaryValue).collect(Collectors.joining(", "))
+				+ Optional.ofNullable(subgroup)
+				.filter(isNotDefaultDictionary())
+				.map(Dictionary::getDictionaryValue)
+				.map(value -> " (" +  value + ")")
+				.orElse(StringUtils.EMPTY);
 	}
 
 }

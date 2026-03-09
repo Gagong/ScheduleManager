@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.schedule.manager.business.entity.ScheduleItem;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,5 +19,7 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long
 
 	@Query("select max(id) from schedule_item")
 	Optional<Long> getMaxId();
+
+	List<ScheduleItem> findAllByRowAndColAndTimesAndSemesterAndClassroomIsNotNullAndProfessorIsNotNull(Integer row, Integer col, Dictionary times, Dictionary semester);
 
 }

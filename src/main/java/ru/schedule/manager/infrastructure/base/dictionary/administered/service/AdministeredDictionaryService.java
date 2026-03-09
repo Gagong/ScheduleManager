@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static ru.schedule.manager.business.dictionary.AdministeredDictionaryType.SUBGROUP;
 import static ru.schedule.manager.business.dictionary.SemesterType.AUTUMN;
 import static ru.schedule.manager.business.dictionary.SemesterType.SPRING;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.DICTIONARY_KEY_NOT_FOUND_EXCEPTION_PATTERN;
@@ -41,6 +42,12 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 	public AdministeredDictionaryService(final DictionaryRepository dictionaryRepository) {
 		this.dictionaryRepository = dictionaryRepository;
 		IAdministeredDictionary.INSTANCE.set(this);
+		IAdministeredDictionary.DEFAULT_SUB_GROUP.set(this.dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(SUBGROUP, DEFAULT_KEY)
+				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
+						DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN,
+						SUBGROUP,
+						DEFAULT_KEY
+				))));
 	}
 
 	@Override
@@ -133,7 +140,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryKey)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(dictionaryType, dictionaryKey).map(Dictionary::getDictionaryValue)
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(dictionaryType, dictionaryKey).filter(IS_NOT_DEFAULT).map(Dictionary::getDictionaryValue)
 			.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
 				DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN,
 				dictionaryType,
@@ -147,12 +154,13 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
 		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValueAndActiveIsTrue(dictionaryType, dictionaryValue)
-			.map(Dictionary::getDictionaryKey)
-			.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
-				DICTIONARY_KEY_NOT_FOUND_EXCEPTION_PATTERN,
-				dictionaryType,
-				dictionaryValue
-			)));
+				.filter(IS_NOT_DEFAULT)
+				.map(Dictionary::getDictionaryKey)
+				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(
+						DICTIONARY_KEY_NOT_FOUND_EXCEPTION_PATTERN,
+						dictionaryType,
+						dictionaryValue
+				)));
 	}
 
 	@Override
@@ -160,7 +168,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryKey)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(dictionaryType, dictionaryKey).isPresent();
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(dictionaryType, dictionaryKey).filter(IS_NOT_DEFAULT).isPresent();
 	}
 
 	@Override
@@ -168,12 +176,15 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 		if (ObjectUtils.allNull(dictionaryType, dictionaryValue)) {
 			throw new NullPointerException(NULL_ARGUMENTS_ERROR);
 		}
-		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValueAndActiveIsTrue(dictionaryType, dictionaryValue).isPresent();
+		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryValueAndActiveIsTrue(dictionaryType, dictionaryValue)
+				.filter(IS_NOT_DEFAULT)
+				.isPresent();
 	}
 
 	public List<DictionaryDto> getAllByType(final AdministeredDictionaryType type, final boolean onlyActive) {
 		return this.fromEntity(
 				dictionaryRepository.findAllByDictionaryTypeOrderByDisplayOrderDesc(type).stream()
+						.filter(IS_NOT_DEFAULT)
 						.filter(dict -> dict.isActive() == onlyActive)
 						.collect(Collectors.toList())
 		);
@@ -181,19 +192,22 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 
 	public List<Dictionary> getAllEntitiesByType(final AdministeredDictionaryType type, final boolean onlyActive) {
 		return dictionaryRepository.findAllByDictionaryTypeOrderByDisplayOrderDesc(type).stream()
+				.filter(IS_NOT_DEFAULT)
 				.filter(dict -> dict.isActive() == onlyActive)
 				.collect(Collectors.toList());
 	}
 
 	public DictionaryDto getByTypeAndKey(final AdministeredDictionaryType type, final String key) {
 		return this.fromEntity(
-			dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(type, key)
-				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN, type, key)))
+				dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(type, key)
+						.filter(IS_NOT_DEFAULT)
+						.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN, type, key)))
 		);
 	}
 
 	public Dictionary getEntityByTypeAndKey(final AdministeredDictionaryType type, final String key) {
 		return dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(type, key)
+				.filter(IS_NOT_DEFAULT)
 				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessageUtils.of(DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN, type, key)));
 	}
 

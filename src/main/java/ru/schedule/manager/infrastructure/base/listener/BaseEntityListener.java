@@ -1,13 +1,12 @@
 package ru.schedule.manager.infrastructure.base.listener;
 
-import java.io.Serializable;
+import org.springframework.stereotype.Component;
+import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
+
 import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-
-import org.springframework.stereotype.Component;
-
-import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
+import java.io.Serializable;
 
 @Component
 public class BaseEntityListener implements Serializable {

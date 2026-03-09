@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
 import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
@@ -65,4 +67,19 @@ public class Dictionary extends BaseEntity {
 			+ id + '}';
 	}
 
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		final Dictionary that = (Dictionary) o;
+
+		return new EqualsBuilder().append(dictionaryType, that.dictionaryType).append(dictionaryKey, that.dictionaryKey).append(dictionaryValue, that.dictionaryValue).isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37).append(dictionaryType).append(dictionaryKey).append(dictionaryValue).toHashCode();
+	}
 }

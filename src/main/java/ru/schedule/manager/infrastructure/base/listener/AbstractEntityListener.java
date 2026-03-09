@@ -1,10 +1,10 @@
 package ru.schedule.manager.infrastructure.base.listener;
 
-import java.io.Serializable;
+import ru.schedule.manager.infrastructure.base.entity.AbstractEntity;
+
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
-
-import ru.schedule.manager.infrastructure.base.entity.AbstractEntity;
+import java.io.Serializable;
 
 public class AbstractEntityListener implements Serializable {
 
