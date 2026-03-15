@@ -165,7 +165,7 @@ export default {
   computed: {
     showError: {
       get() {
-        return !!this.error
+        return !!this.error && !window.location.href.includes("login")
       },
       set(value) {
         if (!value) this.dismissError()

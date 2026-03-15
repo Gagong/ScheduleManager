@@ -10,7 +10,7 @@
 				<v-toolbar-items>
 					<v-tabs v-model="tab">
 						<v-tabs-slider color="#283593"/>
-            <v-tab v-for="item in tabs" :key="item" exact :to="item.path">{{item.label}}</v-tab>
+            <v-tab v-for="item in tabs" :key="item.label" exact :to="item.path">{{item.label}}</v-tab>
             <v-tab v-if="username" key="logout" @click="handleLogout">Выход</v-tab>
             <v-tab v-else key="login" to="/login">Авторизация</v-tab>
 					</v-tabs>
@@ -29,8 +29,7 @@
 
 import store from "@/store/store";
 import router from "@/router/router";
-import {computed} from "vue";
-import {PROFILE_API} from "@/axios/axios";
+import {LOGIN_API, PROFILE_API} from "@/axios/axios";
 import logo from '@/assets/logo.png'
 
 export default {
@@ -40,19 +39,19 @@ export default {
 		tab: 0,
     tabs: [],
     logo: logo,
+    username: null,
 	}),
   setup() {
-    const username = computed(() => store.getters.username);
-    return {
-      username
-    }
+
   },
   mounted() {
-   this.upsertNavs()
+    this.upsertNavs()
+    this.getUserData()
   },
   methods: {
     handleLogout() {
       store.dispatch('logout');
+      this.username = null;
       this.upsertNavs()
       router.push('/');
     },
@@ -60,6 +59,9 @@ export default {
       PROFILE_API.get("getNavigator").then(resp => {
         this.tabs = resp.data
       })
+    },
+    getUserData() {
+      LOGIN_API.get('me').then(resp => this.username = resp.data.fullName);
     }
   }
 }

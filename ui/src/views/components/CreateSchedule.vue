@@ -105,8 +105,6 @@ export default {
 			this.selectedProfessor = null
 			this.selectedDisciplineType = null
       this.selectedSubGroup = null
-      console.log("selected", this.selectedItem)
-      console.log("rollback", this.rollbackItem)
       this.selectedItem = this.rollbackItem
 			this.dialog = false
 		},

@@ -14,4 +14,32 @@
         </loadUpdateData>
     </changeSet>
 
+    <changeSet id="LOAD ROLES" author="sm" runOnChange="true">
+        <loadUpdateData tableName="ROLES" primaryKey="ID" separator=";" file="db/changelog/latest/data/ROLES.csv">
+            <column header="ID" name="ID" type="NUMERIC"/>
+            <column header="NAME" name="NAME" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
+
+    <changeSet id="LOAD EMPLOYEE" author="sm" runOnChange="true">
+        <loadUpdateData tableName="EMPLOYEE" primaryKey="ID" separator=";" file="db/changelog/latest/data/EMPLOYEE.csv">
+            <column header="ID" name="ID" type="NUMERIC"/>
+            <column header="USERNAME" name="USERNAME" type="STRING"/>
+            <column header="PASSWORD" name="PASSWORD" type="STRING"/>
+            <column header="EMAIL" name="EMAIL" type="STRING"/>
+            <column header="FIRST_NAME" name="FIRST_NAME" type="STRING"/>
+            <column header="LAST_NAME" name="LAST_NAME" type="STRING"/>
+            <column header="MIDDLE_NAME" name="MIDDLE_NAME" type="STRING"/>
+        </loadUpdateData>
+    </changeSet>
+
+    <changeSet id="LOAD ADMIN ROLES" author="sm">
+        <sql>
+            INSERT INTO emoloyee_roles (id, employee_id, role_id)
+            SELECT nextval('EXT_HIBERNATE_SEQUENCE'), u.id, r.id
+            FROM employee u, roles r
+            WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN' ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

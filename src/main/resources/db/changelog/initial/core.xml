@@ -206,4 +206,164 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="CREATE EMPLOYEE TABLE" author="sm">
+        <createTable tableName="EMPLOYEE">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--Custom fields-->
+            <column name="USERNAME" remarks="Логин" type="VARCHAR2(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="PASSWORD" remarks="Пароль" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" remarks="E-Mail" type="VARCHAR2(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="FIRST_NAME" remarks="Имя" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" remarks="Фамилия" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIDDLE_NAME" remarks="Отчество" type="VARCHAR2(255)"/>
+
+            <column name="ENABLED" remarks="Активность УЗ" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NON_EXPIRED" remarks="УЗ не устарела" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NON_LOCKED" remarks="УЗ не заблокирована" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREDENTIALS_NON_EXPIRED" remarks="Данные для входа не устарели" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE ROLES TABLE" author="sm">
+        <createTable tableName="ROLES">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--Custom fields-->
+            <column name="NAME" remarks="Имя роли" type="TEXT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE EMOLOYEE_ROLES TABLE" author="sm">
+        <createTable tableName="EMOLOYEE_ROLES">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <!--FK fields-->
+            <column name="employee_id" remarks="Пользователь" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMOLOYEE_ROLES__employee_id__EMPLOYEE__ID"
+                        deleteCascade="true"
+                />
+            </column>
+            <column name="role_id" remarks="Роль" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMOLOYEE_ROLES__ROLE_ID__ROLE__ID"
+                        deleteCascade="true"
+                />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE INDEXES" author="sm">
+        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_PROFESSOR_IDX">
+            <column name="PROFESSOR"/>
+        </createIndex>
+        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_DISCIPLINE_IDX">
+            <column name="DISCIPLINE"/>
+        </createIndex>
+
+        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_PROFESSOR_IDX">
+            <column name="PROFESSOR"/>
+        </createIndex>
+        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_DEPARTMENT_IDX">
+            <column name="DEPARTMENT"/>
+        </createIndex>
+
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_SEMESTER_IDX">
+            <column name="SEMESTER"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_SUBGROUP_IDX">
+            <column name="SUBGROUP"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_STUDENT_GROUP_IDX">
+            <column name="STUDENT_GROUP"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_FACULTY_IDX">
+            <column name="FACULTY"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_TIMES_IDX">
+            <column name="TIMES"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_DISCIPLINE_TYPE_IDX">
+            <column name="DISCIPLINE_TYPE"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_CLASSROOM_IDX">
+            <column name="CLASSROOM"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_DISCIPLINE_IDX">
+            <column name="DISCIPLINE"/>
+        </createIndex>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_PROFESSOR_IDX">
+            <column name="PROFESSOR"/>
+        </createIndex>
+
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_USERNAME_IDX">
+            <column name="USERNAME"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_EMAIL_IDX">
+            <column name="EMAIL"/>
+        </createIndex>
+
+        <createIndex tableName="EMOLOYEE_ROLES" indexName="EMOLOYEE_ROLES_employee_id_IDX">
+            <column name="employee_id"/>
+        </createIndex>
+        <createIndex tableName="EMOLOYEE_ROLES" indexName="EMOLOYEE_ROLES_ROLE_ID_IDX">
+            <column name="ROLE_ID"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

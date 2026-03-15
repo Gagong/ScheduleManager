@@ -66,7 +66,7 @@
             </v-form>
           </v-card-text>
 
-          <v-card-text>
+          <!--<v-card-text>
             <v-alert type="info" variant="tonal">
               <template v-slot:title>
                 Данные по умолчанию
@@ -76,7 +76,7 @@
                 <div><strong>Пароль:</strong> admin</div>
               </div>
             </v-alert>
-          </v-card-text>
+          </v-card-text>-->
         </v-card>
       </v-col>
     </v-row>

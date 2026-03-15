@@ -1,20 +1,18 @@
 package ru.schedule.manager.infrastructure.configuration;
 
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,41 +30,77 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 @EnableWebSecurity
 @TestAvoidGenerated
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfiguration {
 
+	/**
+	 * Настройка CORS
+	 */
 	@Bean
-	public BasicAuthenticationEntryPoint apiAwareLoginUrlAuthenticationEntryPoint() {
+	public CorsConfigurationSource corsConfigurationSource() {
+		final CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(ALLOWED_ORIGINS);
+		configuration.setAllowedMethods(ALLOWED_METHODS);
+		configuration.setAllowedHeaders(ALLOWED_HEADERS);
+		configuration.setAllowCredentials(true);
+
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
+	/**
+	 * Настройка Basic Authentication Entry Point
+	 */
+	@Bean
+	public BasicAuthenticationEntryPoint authenticationEntryPoint() {
 		final BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-		entryPoint.setRealmName("ScheduleManager");
+		entryPoint.setRealmName("Schedule Manager API");
 		return entryPoint;
 	}
 
+	/**
+	 * Кодировщик паролей
+	 */
 	@Bean
-	public UserDetailsService userDetailsService() {
-		final UserDetails user = User.builder()
-				.username("voronenkov")
-				.password(passwordEncoder().encode("admin"))
-				.roles("ADMIN")
-				.build();
-
-		return new InMemoryUserDetailsManager(user);
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder(8);
 	}
 
-	@SneakyThrows
+	/**
+	 * AuthenticationManager
+	 * Получаем его через AuthenticationConfiguration
+	 */
 	@Bean
-	public SecurityFilterChain filterChain(final HttpSecurity http) {
+	public AuthenticationManager authenticationManager(final AuthenticationConfiguration authConfig) throws Exception {
+		return authConfig.getAuthenticationManager();
+	}
+
+	/**
+	 * Цепочка фильтров безопасности
+	 */
+	@Bean
+	public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
 		return http
-				.csrf()
-				.disable()
-				.cors()
-				.and()
+				// Отключаем CSRF для REST API
+				.csrf().disable()
+
+				// Настраиваем CORS
+				.cors().configurationSource(corsConfigurationSource()).and()
+
+				// Настраиваем обработку исключений
 				.exceptionHandling()
-				.authenticationEntryPoint(apiAwareLoginUrlAuthenticationEntryPoint())
+				.authenticationEntryPoint(authenticationEntryPoint())
 				.and()
+
+				// Stateless сессии
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
+
+				// Настройка авторизации запросов
 				.authorizeRequests()
+				// Swagger
 				.antMatchers(
 						"/swagger-ui.html",
 						"/swagger-ui/**",
@@ -74,12 +108,16 @@ public class WebSecurityConfiguration {
 						"/swagger-resources/**",
 						"/webjars/**"
 				).permitAll()
+
+				// Публичные GET запросы
 				.antMatchers(HttpMethod.GET,
 						"/api/dictionary/**",
 						"/api/schedule/**",
 						"/api/professor/**",
 						"/api/profile/**"
 				).permitAll()
+
+				// Публичные POST запросы
 				.antMatchers(HttpMethod.POST,
 						"/api/schedule/getSchedule",
 						"/api/schedule/getFreeClassRoomsAndProfessors",
@@ -87,28 +125,21 @@ public class WebSecurityConfiguration {
 						"/api/professor/getProfessorDepartment",
 						"/api/professor/getDepartmentProfessors"
 				).permitAll()
-				.anyRequest()
-				.fullyAuthenticated()
+
+				// Аутентификация
+				.antMatchers("/api/login/**").permitAll()
+
+				// Регистрация только для админов
+				.antMatchers("/api/profile/register").hasRole("ADMIN")
+
+				// Все остальные запросы требуют аутентификации
+				.anyRequest().authenticated()
 				.and()
+
+				// Базовая HTTP аутентификация
 				.httpBasic(withDefaults())
+
 				.build();
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder(8);
-	}
-
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		final CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(ALLOWED_ORIGINS);
-		configuration.setAllowedMethods(ALLOWED_METHODS);
-		configuration.setAllowedHeaders(ALLOWED_HEADERS);
-		configuration.setAllowCredentials(false);
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
 	}
 
 }
