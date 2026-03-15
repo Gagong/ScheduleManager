@@ -30,7 +30,7 @@ public class ProfessorDepartmentService implements BaseServiceAware<ProfessorDep
 
 	@Override
 	public ProfessorDepartmentLnkDto fromEntity(final ProfessorDepartmentLnk entity) {
-		if  (Objects.isNull(entity)) {
+		if (Objects.isNull(entity)) {
 			return null;
 		}
 		return ProfessorDepartmentLnkDto.builder()

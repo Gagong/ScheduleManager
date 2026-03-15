@@ -59,18 +59,15 @@ public class ScheduleItem extends BaseEntity {
 	@JoinColumn(name = "discipline_type", nullable = false)
 	private Dictionary disciplineType;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonSerialize(using = BaseEntitySerializer.class)
 	@JoinColumn(name = "times", nullable = false)
 	private Dictionary times;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonSerialize(using = BaseEntitySerializer.class)
 	@JoinColumn(name = "faculty", nullable = false)
 	private Dictionary faculty;
-
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonSerialize(using = BaseEntitySerializer.class)
@@ -112,7 +109,7 @@ public class ScheduleItem extends BaseEntity {
 				+ Optional.ofNullable(subgroup)
 				.filter(isNotDefaultDictionary())
 				.map(Dictionary::getDictionaryValue)
-				.map(value -> " (" +  value + ")")
+				.map(value -> " (" + value + ")")
 				.orElse(StringUtils.EMPTY);
 	}
 

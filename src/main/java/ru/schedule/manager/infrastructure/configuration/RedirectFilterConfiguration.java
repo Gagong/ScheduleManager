@@ -5,6 +5,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.schedule.manager.infrastructure.configuration.annotations.TestAvoidGenerated;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 
 @Slf4j
 @Configuration
+@TestAvoidGenerated
 public class RedirectFilterConfiguration {
 
 	@SuppressWarnings("rawtypes")
@@ -34,6 +36,7 @@ public class RedirectFilterConfiguration {
 
 			@SuppressWarnings("NullableProblems")
 			@Override
+			@TestAvoidGenerated
 			protected void doFilterInternal(final HttpServletRequest req,
 			                                final HttpServletResponse res,
 			                                final FilterChain chain) throws ServletException, IOException {

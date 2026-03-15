@@ -1,12 +1,14 @@
 package ru.schedule.manager.infrastructure.configuration.properties;
 
 import lombok.experimental.UtilityClass;
+import ru.schedule.manager.infrastructure.configuration.annotations.TestAvoidGenerated;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
 
 @UtilityClass
+@TestAvoidGenerated
 public class GlobalProperties {
 
 	public static final String DEFAULT_API_PATH = "api/";

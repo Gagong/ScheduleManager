@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.schedule.manager.infrastructure.configuration.annotations.TestAvoidGenerated;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.ALLOWED_HEADERS;
@@ -29,6 +30,7 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 @Profile("!it")
 @Configuration
 @EnableWebSecurity
+@TestAvoidGenerated
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration {
 

@@ -17,6 +17,7 @@ import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -191,7 +192,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 	 * Январь - август = Весенний семестр ${year} - 1/${year}
 	 */
 	public Dictionary getCurrentSemester() {
-		final LocalDate date =  LocalDate.now();
+		final LocalDate date = LocalDate.now();
 		final LocalDate firstDayOfSeptember = LocalDate.of(date.getYear(), Month.SEPTEMBER, 1);
 		final LocalDate lastDayOfDecember = LocalDate.of(date.getYear(), Month.DECEMBER, 31);
 		if (isAfterOrEquals(date, firstDayOfSeptember) && isBeforeOrEquals(date, lastDayOfDecember)) {
@@ -202,8 +203,8 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 	}
 
 	public Map<AdministeredDictionaryType, List<DictionaryDto>> getFreeClassRoomsAndProfessors(final ScheduleItemDto item) {
-		final List<DictionaryDto> allClassRooms = administeredDictionaryService.getAllByType(CLASSROOM, true);
-		final List<DictionaryDto> allProfessors = administeredDictionaryService.getAllByType(PROFESSOR, true);
+		final List<DictionaryDto> allClassRooms = new ArrayList<>(administeredDictionaryService.getAllByType(CLASSROOM, true));
+		final List<DictionaryDto> allProfessors = new ArrayList<>(administeredDictionaryService.getAllByType(PROFESSOR, true));
 		final List<ScheduleItem> getFilledSchedule = scheduleItemRepository.findAllByRowAndColAndTimesAndSemesterAndClassroomIsNotNullAndProfessorIsNotNull(
 				item.getRow(),
 				item.getCol(),

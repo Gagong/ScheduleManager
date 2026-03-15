@@ -17,12 +17,12 @@ public class ProfessorDisciplineLnkDto extends BaseResponseDto {
 
 	private static final long serialVersionUID = 1L;
 
-	public ProfessorDisciplineLnkDto(final Long id) {
-		this.id = id;
-	}
-
 	private DictionaryDto discipline;
 
 	private DictionaryDto professor;
+
+	public ProfessorDisciplineLnkDto(final Long id) {
+		this.id = id;
+	}
 
 }
