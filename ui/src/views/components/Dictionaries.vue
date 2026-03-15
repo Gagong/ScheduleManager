@@ -16,12 +16,7 @@ export default {
 
 	},
 	mounted() {
-    DICTIONARY_API.get('getAll')
-        .then(resp => {
-          this.dictionaries = resp.data
-        }).catch(e => {
-      console.log(e)
-    })
+    DICTIONARY_API.get('getAll').then(resp => {this.dictionaries = resp.data})
 	},
 }
 </script>
