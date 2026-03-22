@@ -6,6 +6,7 @@ import GeneralSchedule from "@/views/components/GeneralSchedule.vue";
 import CreateSchedule from "@/views/components/CreateSchedule.vue";
 import Dictionaries from "@/views/components/Dictionaries.vue";
 import Login from "@/views/components/Login.vue";
+import EmployeAdmin from "@/views/components/EmployeAdmin.vue";
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,12 @@ const routes = [
 		path: '/dictionary',
 		name: 'dictionary',
 		component: Dictionaries,
+		meta: { requiresAuth: true }
+	},
+	{
+		path: '/employee',
+		name: 'employee',
+		component: EmployeAdmin,
 		meta: { requiresAuth: true }
 	},
 	{

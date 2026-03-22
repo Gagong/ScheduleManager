@@ -17,11 +17,12 @@ class ProfileNavigatorTest {
     void getAll_ShouldReturnAllNavigators() {
         final Map<String, Map<String, Object>> result = ProfileNavigator.getAll();
 
-        assertEquals(4, result.size());
+        assertEquals(5, result.size());
         assertTrue(result.containsKey("_0_GENERAL_SCHEDULE"));
         assertTrue(result.containsKey("_1_CREATE_SCHEDULE"));
         assertTrue(result.containsKey("_2_DICTIONARY"));
         assertTrue(result.containsKey("_3_PROFESSOR"));
+        assertTrue(result.containsKey("_4_EMPLOYEE"));
     }
 
     @Test

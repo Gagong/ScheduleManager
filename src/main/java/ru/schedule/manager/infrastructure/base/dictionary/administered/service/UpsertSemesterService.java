@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 
@@ -22,6 +23,7 @@ public class UpsertSemesterService {
     private final AdministeredDictionaryService administeredDictionaryService;
 
     @PostConstruct
+    @Transactional
     public void fillSemesters() {
         for (int i = LocalDate.now().getYear() - 10; i < LocalDate.now().getYear() + 100; i++) {
             try {

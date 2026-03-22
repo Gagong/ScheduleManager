@@ -8,18 +8,24 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.schedule.manager.infrastructure.base.dto.EmployeeDto;
 import ru.schedule.manager.infrastructure.base.entity.Employee;
+import ru.schedule.manager.infrastructure.base.request.EmployeeDataRequest;
 import ru.schedule.manager.infrastructure.base.request.LoginRequest;
-import ru.schedule.manager.infrastructure.base.request.RegisterRequest;
-import ru.schedule.manager.infrastructure.base.response.EmployeeDto;
 import ru.schedule.manager.infrastructure.base.service.CustomUserDetailsService;
 import ru.schedule.manager.infrastructure.base.service.EmployeeService;
+
+import java.util.List;
 
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 
@@ -33,7 +39,7 @@ public class EmployeeController {
 
 	private final CustomUserDetailsService userDetailsService;
 
-	private final EmployeeService userService;
+	private final EmployeeService employeeService;
 
 	@PostMapping("/login")
 	public ResponseEntity<EmployeeDto> login(@Validated @RequestBody final LoginRequest loginRequest) {
@@ -55,8 +61,28 @@ public class EmployeeController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/register")
-	public ResponseEntity<EmployeeDto> register(@Validated @RequestBody final RegisterRequest registerRequest) {
-		return ResponseEntity.ok(userService.registerUser(registerRequest));
+	public ResponseEntity<EmployeeDto> register(@Validated @RequestBody final EmployeeDataRequest registerRequest) {
+		return ResponseEntity.ok(employeeService.registerUser(registerRequest));
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/getEmployees")
+	public List<EmployeeDto> getEmployees() {
+		return employeeService.getEmployees();
+	}
+
+	@Transactional
+	@PreAuthorize("hasRole('ADMIN')")
+	@PatchMapping("/employee/{id}/toggle-status")
+	public EmployeeDto toggleStatusEmployee(@PathVariable final Long id) {
+		return employeeService.toggleEmployee(id);
+	}
+
+	@Transactional
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/employee/{id}")
+	public EmployeeDto updateEmployee(@PathVariable final Long id, @Validated @RequestBody final EmployeeDataRequest updateRequest) {
+		return employeeService.updateEmployee(id, updateRequest);
 	}
 
 	@GetMapping("/me")

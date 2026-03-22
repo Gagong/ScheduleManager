@@ -24,7 +24,8 @@ public enum ProfileNavigator implements Serializable, SimpleDictionary {
 	_0_GENERAL_SCHEDULE("Расписание", "/", false),
 	_1_CREATE_SCHEDULE("Составление расписания", "/create-schedule", true),
 	_2_DICTIONARY("Справочники", "/dictionary", true),
-	_3_PROFESSOR("Преподаватели", "/professor", true);
+	_3_PROFESSOR("Преподаватели", "/professor", true),
+	_4_EMPLOYEE("Менеджеры", "/employee", true);
 
 	private final String label;
 

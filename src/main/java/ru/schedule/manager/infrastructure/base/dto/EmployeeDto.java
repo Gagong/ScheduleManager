@@ -1,11 +1,10 @@
-package ru.schedule.manager.infrastructure.base.response;
+package ru.schedule.manager.infrastructure.base.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.entity.Role;
 

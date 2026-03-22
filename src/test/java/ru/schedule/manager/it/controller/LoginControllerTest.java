@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import ru.schedule.manager.business.controller.EmployeeController;
+import ru.schedule.manager.infrastructure.base.dto.EmployeeDto;
 import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.repository.EmployeeRepository;
 import ru.schedule.manager.infrastructure.base.request.LoginRequest;
-import ru.schedule.manager.infrastructure.base.response.EmployeeDto;
 import ru.schedule.manager.infrastructure.base.service.CustomUserDetailsService;
 
 import java.util.Optional;

@@ -47,6 +47,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 	}
 
 	@Override
+	@Transactional
 	public DictionaryDto fromEntity(final Dictionary entity) {
 		return DictionaryDto.builder()
 			.type(entity.getDictionaryType().getDictionaryKey())
@@ -103,6 +104,7 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 	}
 
 	@Override
+	@Transactional
 	public DictionaryDto create(final DictionaryDto dto) {
 		final AdministeredDictionaryType type = AdministeredDictionaryType.valueOf(dto.getType());
 		if (containsKey(type, dto.getKey()) || containsValue(type, dto.getValue())) {

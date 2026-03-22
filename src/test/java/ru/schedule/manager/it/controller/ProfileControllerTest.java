@@ -7,9 +7,9 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.schedule.manager.business.controller.ProfileController;
 import ru.schedule.manager.business.dictionary.ProfileNavigator;
+import ru.schedule.manager.infrastructure.base.entity.Employee;
 
 import java.util.Map;
 
@@ -52,7 +52,7 @@ class ProfileControllerTest {
     @Test
     void getNavigator_WhenUserAuthenticated_ShouldReturnAll() {
         // Подготовка
-        final UserDetails userDetails = mock(UserDetails.class);
+        final Employee userDetails = mock(Employee.class);
         when(userDetails.getUsername()).thenReturn("testUser");
 
         final Map<String, Map<String, Object>> expectedMap = Map.of(
@@ -77,7 +77,7 @@ class ProfileControllerTest {
     @Test
     void getNavigator_WhenUserDetailsHasAuthorities_ShouldReturnAll() {
         // Подготовка
-        final UserDetails userDetails = mock(UserDetails.class);
+        final Employee userDetails = mock(Employee.class);
         when(userDetails.getAuthorities()).thenReturn(null);
 
         final Map<String, Map<String, Object>> expectedMap = Map.of();
@@ -110,7 +110,7 @@ class ProfileControllerTest {
             assertEquals(1, unsecuredResult.size());
 
             // Проверка аутентифицированного
-            final Map<String, Map<String, Object>> allResult = profileController.getNavigator(mock(UserDetails.class));
+            final Map<String, Map<String, Object>> allResult = profileController.getNavigator(mock(Employee.class));
             assertEquals(2, allResult.size());
         }
     }

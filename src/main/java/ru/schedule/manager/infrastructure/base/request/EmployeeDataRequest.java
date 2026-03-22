@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class RegisterRequest {
+public class EmployeeDataRequest {
 
     @NotBlank(message = "Логин обязателен для заполнения")
     @Size(min = 3, max = 50, message = "Длина логина должна быть в диапазоне 3-50 символов")
