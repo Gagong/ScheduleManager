@@ -13,6 +13,7 @@ import ru.schedule.manager.business.repository.ScheduleItemRepository;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
+import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -60,6 +62,8 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 			.id(entity.getId())
 			.createdDateTime(entity.getCreatedDateTime())
 			.updateDateTime(entity.getUpdateDateTime())
+			.createdBy(Optional.ofNullable(entity.getCreatedByEmployee()).map(Employee::getFullName).orElse(null))
+			.updatedBy(Optional.ofNullable(entity.getUpdatedByEmployee()).map(Employee::getFullName).orElse(null))
 			.build();
 	}
 
@@ -148,6 +152,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		return this.fromEntity(
 				scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(row, col, times, semester, faculty, group, subgroup)
 						.or(() -> scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(row, col, times, semester, faculty, group, defaultSubgroup()))
+						.or(() -> scheduleItemRepository.findByRowAndColAndTimesAndSemesterAndFacultyAndGroup(row, col, times, semester, faculty, group))
 						.orElseGet(() -> ScheduleItem.builder()
 								.id(ThreadLocalRandom.current().nextLong(lastId + 1000000L, lastId + 10000000L))
 								.semester(semester)

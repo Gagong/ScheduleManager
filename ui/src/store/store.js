@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {LOGIN_API} from "@/axios/axios";
+import {EMPLOYEE_API} from "@/axios/axios";
 
 Vue.use(Vuex)
 
@@ -17,8 +17,16 @@ export default new Vuex.Store({
 		id: localStorage.getItem('id') || '',
 		roles: localStorage.getItem('roles') || [],
 		isAuthenticated: false,
+		messages: [],
+		notifications: []
 	},
 	mutations: {
+		ADD_MESSAGE(state, message) {
+			state.messages.push(message);
+		},
+		ADD_NOTIFICATION(state, notification) {
+			state.notifications.push(notification);
+		},
 		SET_CREDENTIALS(state, { username, password }) {
 			state.username = username;
 			state.password = password;
@@ -63,6 +71,20 @@ export default new Vuex.Store({
 		},
 	},
 	actions: {
+		initWebSocket({ commit }) {
+			Vue.websocket.subscribe('/topic/messages', (data) => {
+				commit('ADD_MESSAGE', data);
+			});
+
+			Vue.websocket.subscribe('/topic/notifications', (data) => {
+				commit('ADD_NOTIFICATION', data);
+			});
+		},
+
+		// eslint-disable-next-line no-unused-vars
+		sendMessage({ commit }, message) {
+			Vue.websocket.send('/app/message', message);
+		},
 		// eslint-disable-next-line no-unused-vars
 		async login({ commit, state }, { username, password }) {
 			try {
@@ -72,7 +94,7 @@ export default new Vuex.Store({
 					password: password
 				}
 
-				const response = await LOGIN_API.post('login', body);
+				const response = await EMPLOYEE_API.post('login', body);
 				commit('SET_AUTHENTICATED', response.data)
 
 				return { success: true };
@@ -100,7 +122,7 @@ export default new Vuex.Store({
 					username: state.username,
 					password: state.password
 				}
-				const response = await LOGIN_API.post('/login', body);
+				const response = await EMPLOYEE_API.post('/login', body);
 				commit('SET_AUTHENTICATED', response.data);
 				return true;
 			} catch (error) {

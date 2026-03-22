@@ -39,6 +39,8 @@ public class ProfessorDepartmentService implements BaseServiceAware<ProfessorDep
 			.id(entity.getId())
 			.createdDateTime(entity.getCreatedDateTime())
 			.updateDateTime(entity.getUpdateDateTime())
+			.createdBy(entity.getCreatedByEmployee().getFullName())
+			.updatedBy(entity.getUpdatedByEmployee().getFullName())
 			.build();
 	}
 

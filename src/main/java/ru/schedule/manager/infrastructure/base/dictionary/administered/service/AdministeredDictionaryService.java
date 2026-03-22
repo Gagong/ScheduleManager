@@ -15,8 +15,6 @@ import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Di
 import ru.schedule.manager.infrastructure.base.dictionary.administered.repository.DictionaryRepository;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -25,8 +23,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static ru.schedule.manager.business.dictionary.AdministeredDictionaryType.SUBGROUP;
-import static ru.schedule.manager.business.dictionary.SemesterType.AUTUMN;
-import static ru.schedule.manager.business.dictionary.SemesterType.SPRING;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.DICTIONARY_KEY_NOT_FOUND_EXCEPTION_PATTERN;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.DICTIONARY_VALUE_NOT_FOUND_EXCEPTION_PATTERN;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
@@ -61,6 +57,8 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 			.id(entity.getId())
 			.createdDateTime(entity.getCreatedDateTime())
 			.updateDateTime(entity.getUpdateDateTime())
+			.createdBy(entity.getCreatedByEmployee().getFullName())
+			.updatedBy(entity.getUpdatedByEmployee().getFullName())
 			.build();
 	}
 
@@ -236,34 +234,6 @@ public class AdministeredDictionaryService implements BaseServiceAware<Dictionar
 						Dictionary.class.getSimpleName(),
 						id
 				)));
-	}
-
-	@PostConstruct
-	public void fillSemesters() {
-		for (int i = LocalDate.now().getYear() - 10; i < LocalDate.now().getYear() + 100; i++) {
-			try {
-				this.create(
-						DictionaryDto.builder()
-								.type(AdministeredDictionaryType.SEMESTER.name())
-								.key(AUTUMN.name() + "_" + i + "_" + (i + 1))
-								.value(AUTUMN.getValue() + " " + i + "/" + (i + 1))
-								.build()
-				);
-			} catch (final Exception e) {
-				//Skip AlreadyExistsException
-			}
-			try {
-				this.create(
-						DictionaryDto.builder()
-								.type(AdministeredDictionaryType.SEMESTER.name())
-								.key(SPRING.name() + "_" + i + "_" + (i + 1))
-								.value(SPRING.getValue() + " " + i + "/" + (i + 1))
-								.build()
-				);
-			} catch (final Exception e) {
-				//Skip AlreadyExistsException
-			}
-		}
 	}
 
 }

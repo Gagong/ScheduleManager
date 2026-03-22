@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.junit.jupiter.api.Test;
 import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
+import ru.schedule.manager.infrastructure.base.entity.Employee;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BaseEntityTest {
+
+    private static final Employee ADMIN = new Employee();
 
     @Test
     void builder_ShouldCreateEntity() {
@@ -44,7 +47,7 @@ class BaseEntityTest {
 
     @Test
     void toString_ShouldContainIdAndClass() {
-        final TestEntity entity = new TestEntity(1L, LocalDateTime.now(), LocalDateTime.now());
+        final TestEntity entity = new TestEntity(1L, LocalDateTime.now(), LocalDateTime.now(), ADMIN, ADMIN);
 
         final String toString = entity.toString();
 
@@ -55,9 +58,9 @@ class BaseEntityTest {
     @Test
     void equals_ShouldUseId() {
         final LocalDateTime now = LocalDateTime.now();
-        final TestEntity entity1 = new TestEntity(1L, now, now);
-        final TestEntity entity2 = new TestEntity(1L, now, now);
-        final TestEntity entity3 = new TestEntity(2L, now, now);
+        final TestEntity entity1 = new TestEntity(1L, now, now, ADMIN, ADMIN);
+        final TestEntity entity2 = new TestEntity(1L, now, now, ADMIN, ADMIN);
+        final TestEntity entity3 = new TestEntity(2L, now, now, ADMIN, ADMIN);
 
         assertEquals(entity1, entity2);
         assertNotEquals(entity1, entity3);
@@ -68,8 +71,8 @@ class BaseEntityTest {
     @SuperBuilder
     @NoArgsConstructor
     private static class TestEntity extends BaseEntity {
-        TestEntity(final Long id, final LocalDateTime createdDateTime, final LocalDateTime updateDateTime) {
-            super(id, createdDateTime, updateDateTime);
+        TestEntity(final Long id, final LocalDateTime createdDateTime, final LocalDateTime updateDateTime, final Employee createdBy, final Employee updateBy) {
+            super(id, 1L, createdDateTime, updateDateTime, createdBy, updateBy, 1L);
         }
 
     }

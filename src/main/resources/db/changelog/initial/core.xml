@@ -4,17 +4,111 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
         logicalFilePath="db/changelog/initial/core.xml">
 
+    <changeSet id="CREATE EMPLOYEE TABLE" author="sm">
+        <createTable tableName="EMPLOYEE">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMPLOYEE__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMPLOYEE__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+
+            <!--Custom fields-->
+            <column name="USERNAME" remarks="Логин" type="VARCHAR2(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="PASSWORD" remarks="Пароль" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" remarks="E-Mail" type="VARCHAR2(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="FIRST_NAME" remarks="Имя" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" remarks="Фамилия" type="VARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MIDDLE_NAME" remarks="Отчество" type="VARCHAR2(255)"/>
+
+            <column name="ENABLED" remarks="Активность УЗ" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NON_EXPIRED" remarks="УЗ не устарела" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACCOUNT_NON_LOCKED" remarks="УЗ не заблокирована" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREDENTIALS_NON_EXPIRED" remarks="Данные для входа не устарели" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_USERNAME_IDX">
+            <column name="USERNAME"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_EMAIL_IDX">
+            <column name="EMAIL"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet id="CREATE DICTIONARY TABLE" author="sm">
         <createTable tableName="dictionary">
             <!--Base fields-->
             <column name="ID" remarks="ID записи" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__DICTIONARY__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__DICTIONARY__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
             </column>
 
             <!--Custom fields-->
@@ -37,6 +131,12 @@
             <!--FK fields-->
 
         </createTable>
+        <createIndex tableName="DICTIONARY" indexName="DICTIONARY_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <createIndex tableName="DICTIONARY" indexName="DICTIONARY_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="CREATE PROFESSOR DISCIPLINE LNK TABLE" author="sm">
@@ -45,11 +145,28 @@
             <column name="ID" remarks="ID записи" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__PROFESSOR_DISCIPLINE_LNK__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__PROFESSOR_DISCIPLINE_LNK__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
             </column>
 
             <!--Custom fields-->
@@ -72,6 +189,19 @@
                 />
             </column>
         </createTable>
+        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+
+        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_PROFESSOR_IDX">
+            <column name="PROFESSOR"/>
+        </createIndex>
+        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_DISCIPLINE_IDX">
+            <column name="DISCIPLINE"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="CREATE PROFESSOR DEPARTMENT LNK TABLE" author="sm">
@@ -80,11 +210,28 @@
             <column name="ID" remarks="ID записи" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__PROFESSOR_DEPARTMENT_LNK__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__PROFESSOR_DEPARTMENT_LNK__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
             </column>
 
             <!--Custom fields-->
@@ -107,6 +254,19 @@
                 />
             </column>
         </createTable>
+        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+
+        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_PROFESSOR_IDX">
+            <column name="PROFESSOR"/>
+        </createIndex>
+        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_DEPARTMENT_IDX">
+            <column name="DEPARTMENT"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="CREATE SCHEDULE_ITEM TABLE" author="sm">
@@ -115,11 +275,28 @@
             <column name="ID" remarks="ID записи" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
                 <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__SCHEDULE_ITEM__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__SCHEDULE_ITEM__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
             </column>
 
             <!--Custom fields-->
@@ -204,123 +381,11 @@
                 />
             </column>
         </createTable>
-    </changeSet>
-
-    <changeSet id="CREATE EMPLOYEE TABLE" author="sm">
-        <createTable tableName="EMPLOYEE">
-            <!--Base fields-->
-            <column name="ID" remarks="ID записи" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-
-            <!--Custom fields-->
-            <column name="USERNAME" remarks="Логин" type="VARCHAR2(50)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="PASSWORD" remarks="Пароль" type="VARCHAR2(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="EMAIL" remarks="E-Mail" type="VARCHAR2(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-
-            <column name="FIRST_NAME" remarks="Имя" type="VARCHAR2(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="LAST_NAME" remarks="Фамилия" type="VARCHAR2(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MIDDLE_NAME" remarks="Отчество" type="VARCHAR2(255)"/>
-
-            <column name="ENABLED" remarks="Активность УЗ" type="BOOLEAN" defaultValueBoolean="true">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ACCOUNT_NON_EXPIRED" remarks="УЗ не устарела" type="BOOLEAN" defaultValueBoolean="true">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ACCOUNT_NON_LOCKED" remarks="УЗ не заблокирована" type="BOOLEAN" defaultValueBoolean="true">
-                <constraints nullable="false"/>
-            </column>
-            <column name="CREDENTIALS_NON_EXPIRED" remarks="Данные для входа не устарели" type="BOOLEAN" defaultValueBoolean="true">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="CREATE ROLES TABLE" author="sm">
-        <createTable tableName="ROLES">
-            <!--Base fields-->
-            <column name="ID" remarks="ID записи" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-
-            <!--Custom fields-->
-            <column name="NAME" remarks="Имя роли" type="TEXT">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="CREATE EMOLOYEE_ROLES TABLE" author="sm">
-        <createTable tableName="EMOLOYEE_ROLES">
-            <!--Base fields-->
-            <column name="ID" remarks="ID записи" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-
-            <!--FK fields-->
-            <column name="employee_id" remarks="Пользователь" type="BIGINT">
-                <constraints
-                        nullable="false"
-                        referencedTableName="EMPLOYEE"
-                        referencedColumnNames="ID"
-                        foreignKeyName="FK__EMOLOYEE_ROLES__employee_id__EMPLOYEE__ID"
-                        deleteCascade="true"
-                />
-            </column>
-            <column name="role_id" remarks="Роль" type="BIGINT">
-                <constraints
-                        nullable="false"
-                        referencedTableName="EMPLOYEE"
-                        referencedColumnNames="ID"
-                        foreignKeyName="FK__EMOLOYEE_ROLES__ROLE_ID__ROLE__ID"
-                        deleteCascade="true"
-                />
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="CREATE INDEXES" author="sm">
-        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_PROFESSOR_IDX">
-            <column name="PROFESSOR"/>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
         </createIndex>
-        <createIndex tableName="PROFESSOR_DISCIPLINE_LNK" indexName="PROFESSOR_DISCIPLINE_LNK_DISCIPLINE_IDX">
-            <column name="DISCIPLINE"/>
-        </createIndex>
-
-        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_PROFESSOR_IDX">
-            <column name="PROFESSOR"/>
-        </createIndex>
-        <createIndex tableName="PROFESSOR_DEPARTMENT_LNK" indexName="PROFESSOR_DEPARTMENT_LNK_DEPARTMENT_IDX">
-            <column name="DEPARTMENT"/>
+        <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
         </createIndex>
 
         <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_SEMESTER_IDX">
@@ -350,18 +415,112 @@
         <createIndex tableName="SCHEDULE_ITEM" indexName="SCHEDULE_ITEM_PROFESSOR_IDX">
             <column name="PROFESSOR"/>
         </createIndex>
+    </changeSet>
 
-        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_USERNAME_IDX">
-            <column name="USERNAME"/>
+    <changeSet id="CREATE ROLES TABLE" author="sm">
+        <createTable tableName="ROLES">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__ROLES__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__ROLES__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+
+            <!--Custom fields-->
+            <column name="NAME" remarks="Имя роли" type="TEXT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <createIndex tableName="ROLES" indexName="ROLES_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
         </createIndex>
-        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_EMAIL_IDX">
-            <column name="EMAIL"/>
+        <createIndex tableName="ROLES" indexName="ROLES_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="CREATE EMPLOYEE_ROLES TABLE" author="sm">
+        <createTable tableName="EMPLOYEE_ROLES">
+            <!--Base fields-->
+            <column name="ID" remarks="ID записи" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VSTAMP" type="NUMBER(19)" defaultValue="0"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="CREATED_DATE" remarks="Дата создания записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="UPDATE_DATE" remarks="Дата обновления записи" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY_EMPLOYEE_ID" remarks="Создатель записи" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMPLOYEE_ROLES__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+            <column name="UPDATED_BY_EMPLOYEE_ID" remarks="Обновляющий запись" type="BIGINT" defaultValue="1">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMPLOYEE_ROLES__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                />
+            </column>
+
+            <!--FK fields-->
+            <column name="employee_id" remarks="Пользователь" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMPLOYEE_ROLES__employee_id__EMPLOYEE__ID"
+                        deleteCascade="true"
+                />
+            </column>
+            <column name="role_id" remarks="Роль" type="BIGINT">
+                <constraints
+                        nullable="false"
+                        referencedTableName="EMPLOYEE"
+                        referencedColumnNames="ID"
+                        foreignKeyName="FK__EMPLOYEE_ROLES__ROLE_ID__ROLE__ID"
+                        deleteCascade="true"
+                />
+            </column>
+        </createTable>
+        <createIndex tableName="EMPLOYEE_ROLES" indexName="EMPLOYEE_ROLES_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEE_ROLES" indexName="EMPLOYEE_ROLES_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
         </createIndex>
 
-        <createIndex tableName="EMOLOYEE_ROLES" indexName="EMOLOYEE_ROLES_employee_id_IDX">
+        <createIndex tableName="EMPLOYEE_ROLES" indexName="EMPLOYEE_ROLES_employee_id_IDX">
             <column name="employee_id"/>
         </createIndex>
-        <createIndex tableName="EMOLOYEE_ROLES" indexName="EMOLOYEE_ROLES_ROLE_ID_IDX">
+        <createIndex tableName="EMPLOYEE_ROLES" indexName="EMPLOYEE_ROLES_ROLE_ID_IDX">
             <column name="ROLE_ID"/>
         </createIndex>
     </changeSet>

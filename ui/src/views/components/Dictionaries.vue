@@ -25,7 +25,6 @@ export default {
   <v-container fluid>
     <Navigator/>
     <v-row>
-      <v-col cols="1"/>
       <v-col cols="2">
         <v-toolbar flat>
           <v-toolbar-items>
@@ -38,14 +37,13 @@ export default {
           </v-toolbar-items>
         </v-toolbar>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="10">
         <v-tabs-items v-model="dictionaryTab">
           <v-tab-item v-for="dictionary in dictionaries" :key="dictionary.key">
             <DictionaryTab :dictionary="dictionary" :canEdit="dictionary.key !== 'LESSON_TIME' && dictionary.key !== 'SEMESTER'"/>
           </v-tab-item>
         </v-tabs-items>
       </v-col>
-      <v-col cols="1"/>
     </v-row>
   </v-container>
 </template>

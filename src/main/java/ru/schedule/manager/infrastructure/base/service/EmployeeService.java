@@ -10,7 +10,7 @@ import ru.schedule.manager.infrastructure.base.entity.Role;
 import ru.schedule.manager.infrastructure.base.repository.EmployeeRepository;
 import ru.schedule.manager.infrastructure.base.repository.RoleRepository;
 import ru.schedule.manager.infrastructure.base.request.RegisterRequest;
-import ru.schedule.manager.infrastructure.base.response.EmployeeResponse;
+import ru.schedule.manager.infrastructure.base.response.EmployeeDto;
 
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public class EmployeeService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public EmployeeResponse registerUser(final RegisterRequest request) {
+    public EmployeeDto registerUser(final RegisterRequest request) {
         log.info("Registering new user: {}", request.getUsername());
 
         // Проверка уникальности
@@ -56,7 +56,7 @@ public class EmployeeService {
         final Employee savedUser = employeeRepository.save(user);
         log.info("User registered successfully: {}", savedUser);
 
-        return EmployeeResponse.fromEmployee(savedUser);
+        return EmployeeDto.fromEntity(savedUser);
     }
 
 }

@@ -14,6 +14,8 @@ import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.Dicti
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.repository.DictionaryRepository;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.service.UpsertSemesterService;
+import ru.schedule.manager.infrastructure.base.entity.Employee;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,9 +55,14 @@ class AdministeredDictionaryServiceTest {
 
     private LocalDateTime now;
 
+    private Employee admin;
+
     @BeforeEach
     void setUp() {
         now = LocalDateTime.now();
+
+        admin = new Employee();
+        admin.setId(1L);
 
         defaultSubgroupEntity = Dictionary.builder()
                 .id(1L)
@@ -66,6 +73,8 @@ class AdministeredDictionaryServiceTest {
                 .displayOrder(0)
                 .createdDateTime(now)
                 .updateDateTime(now)
+                .createdByEmployee(admin)
+                .updatedByEmployee(admin)
                 .build();
 
         when(dictionaryRepository.findDictionaryByDictionaryTypeAndDictionaryKeyAndActiveIsTrue(SUBGROUP, DEFAULT_KEY)).thenReturn(Optional.of(defaultSubgroupEntity));
@@ -79,6 +88,8 @@ class AdministeredDictionaryServiceTest {
                 .displayOrder(1)
                 .createdDateTime(now)
                 .updateDateTime(now)
+                .createdByEmployee(admin)
+                .updatedByEmployee(admin)
                 .build();
 
         dictionaryDto = DictionaryDto.builder()
@@ -488,8 +499,10 @@ class AdministeredDictionaryServiceTest {
 
     @Test
     void fillSemesters_ShouldCreateSemesters() {
+        when(dictionaryRepository.save(any())).thenReturn(dictionaryEntity);
         final AdministeredDictionaryService administeredDictionaryService = new AdministeredDictionaryService(dictionaryRepository);
-        administeredDictionaryService.fillSemesters();
+        final UpsertSemesterService upsertSemesterService = new UpsertSemesterService(administeredDictionaryService);
+        upsertSemesterService.fillSemesters();
     }
 
 }

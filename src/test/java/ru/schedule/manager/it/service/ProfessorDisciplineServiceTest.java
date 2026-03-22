@@ -14,6 +14,7 @@ import ru.schedule.manager.business.service.ProfessorDisciplineService;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
+import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
 import java.time.LocalDateTime;
@@ -56,9 +57,14 @@ class ProfessorDisciplineServiceTest {
 
     private LocalDateTime now;
 
+    private Employee admin;
+
     @BeforeEach
     void setUp() {
         now = LocalDateTime.now();
+
+        admin = new Employee();
+        admin.setId(1L);
 
         professorEntity = new Dictionary();
         professorEntity.setId(1L);
@@ -84,6 +90,8 @@ class ProfessorDisciplineServiceTest {
                 .discipline(disciplineEntity)
                 .createdDateTime(now)
                 .updateDateTime(now)
+                .createdByEmployee(admin)
+                .updatedByEmployee(admin)
                 .build();
 
         dto = ProfessorDisciplineLnkDto.builder()

@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BaseResponseDtoTest {
 
+    private static final String ADMIN = "ADMIN";
+
     @Test
     void builder_ShouldCreateDto() {
         final LocalDateTime now = LocalDateTime.now();
@@ -21,43 +23,53 @@ class BaseResponseDtoTest {
                 .id(1L)
                 .createdDateTime(now)
                 .updateDateTime(now)
+                .createdBy(ADMIN)
+                .updatedBy(ADMIN)
                 .build();
 
         assertNotNull(dto);
         assertEquals(1L, dto.getId());
         assertEquals(now, dto.getCreatedDateTime());
         assertEquals(now, dto.getUpdateDateTime());
+        assertEquals(ADMIN, dto.getCreatedBy());
+        assertEquals(ADMIN, dto.getUpdatedBy());
     }
 
     @Test
     void noArgsConstructor_ShouldCreateEmptyDto() {
-        final TestDto dto = new TestDto(null, null, null);
+        final TestDto dto = new TestDto(null, null, null, null, null);
 
         assertNull(dto.getId());
         assertNull(dto.getCreatedDateTime());
         assertNull(dto.getUpdateDateTime());
+        assertNull(dto.getCreatedBy());
+        assertNull(dto.getUpdatedBy());
     }
 
     @Test
     void setters_ShouldUpdateValues() {
-        final TestDto dto = new TestDto(null, null, null);
+        final TestDto dto = new TestDto(null, null, null, null, null);
         final LocalDateTime now = LocalDateTime.now();
 
         dto.setId(1L);
         dto.setCreatedDateTime(now);
         dto.setUpdateDateTime(now);
+        dto.setCreatedBy(ADMIN);
+        dto.setUpdatedBy(ADMIN);
 
         assertEquals(1L, dto.getId());
         assertEquals(now, dto.getCreatedDateTime());
         assertEquals(now, dto.getUpdateDateTime());
+        assertEquals(ADMIN, dto.getCreatedBy());
+        assertEquals(ADMIN, dto.getUpdatedBy());
     }
 
     @Test
     void equals_ShouldUseId() {
         final LocalDateTime now = LocalDateTime.now();
-        final TestDto dto1 = new TestDto(1L, now, now);
-        final TestDto dto2 = new TestDto(1L, now, now);
-        final TestDto dto3 = new TestDto(2L, now, now);
+        final TestDto dto1 = new TestDto(1L, now, now, null, null);
+        final TestDto dto2 = new TestDto(1L, now, now, null, null);
+        final TestDto dto3 = new TestDto(2L, now, now, null, null);
 
         assertEquals(dto1, dto2);
         assertNotEquals(dto1, dto3);
@@ -67,8 +79,8 @@ class BaseResponseDtoTest {
 
     @SuperBuilder
     private static class TestDto extends BaseResponseDto {
-        TestDto(final Long id, final LocalDateTime createdDateTime, final LocalDateTime updateDateTime) {
-            super(id, createdDateTime, updateDateTime);
+        TestDto(final Long id, final LocalDateTime createdDateTime, final LocalDateTime updateDateTime, final String createdBy, final String updateBy) {
+            super(id, createdDateTime, updateDateTime, createdBy, updateBy);
         }
     }
 

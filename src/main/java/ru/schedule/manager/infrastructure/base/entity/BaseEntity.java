@@ -17,13 +17,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import ru.schedule.manager.infrastructure.base.listener.BaseEntityListener;
+import ru.schedule.manager.infrastructure.base.serializer.BaseEntitySerializer;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -53,6 +58,10 @@ public abstract class BaseEntity extends AbstractEntity implements Serializable 
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Long id;
 
+	@Version
+	@Column(name = "vstamp")
+	protected long vstamp;
+
 	@Builder.Default
 	@CreationTimestamp
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -64,6 +73,20 @@ public abstract class BaseEntity extends AbstractEntity implements Serializable 
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@Column(name = "update_date")
 	protected LocalDateTime updateDateTime = LocalDateTime.now();
+
+	@ManyToOne
+	@JsonSerialize(using = BaseEntitySerializer.class)
+	@JoinColumn(name = "created_by_employee_id")
+	protected Employee createdByEmployee;
+
+	@ManyToOne
+	@JsonSerialize(using = BaseEntitySerializer.class)
+	@JoinColumn(name = "updated_by_employee_id")
+	protected Employee updatedByEmployee;
+
+	@Transient
+	@Builder.Default
+	private long loadVstamp = -1;
 
 	@Override
 	public String toString() {

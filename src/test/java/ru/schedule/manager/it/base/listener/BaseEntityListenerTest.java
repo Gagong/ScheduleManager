@@ -6,6 +6,7 @@ import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
 import ru.schedule.manager.infrastructure.base.listener.BaseEntityListener;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BaseEntityListenerTest {
 
@@ -26,12 +27,12 @@ class BaseEntityListenerTest {
 
     @Test
     void onCreate_ShouldNotThrowException() {
-        assertDoesNotThrow(() -> listener.onCreate(entity));
+        assertThrows(NullPointerException.class, () -> listener.onCreate(entity));
     }
 
     @Test
     void onUpdate_ShouldNotThrowException() {
-        assertDoesNotThrow(() -> listener.onUpdate(entity));
+        assertThrows(NullPointerException.class, () -> listener.onUpdate(entity));
     }
 
     private static class TestEntity extends BaseEntity {

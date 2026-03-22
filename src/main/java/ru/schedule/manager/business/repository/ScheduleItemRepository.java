@@ -15,6 +15,8 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long
 
 	Optional<ScheduleItem> findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubgroup(Integer row, Integer col, Dictionary times, Dictionary semester, Dictionary faculty, Dictionary group, Dictionary subgroup);
 
+	Optional<ScheduleItem> findByRowAndColAndTimesAndSemesterAndFacultyAndGroup(Integer row, Integer col, Dictionary times, Dictionary semester, Dictionary faculty, Dictionary group);
+
 	Optional<ScheduleItem> findByRowAndColAndTimesAndSemesterAndProfessor(Integer row, Integer col, Dictionary times, Dictionary semester, Dictionary professor);
 
 	@Query("select max(id) from schedule_item")

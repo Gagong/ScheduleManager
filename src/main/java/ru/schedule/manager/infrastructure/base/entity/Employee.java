@@ -79,7 +79,7 @@ public class Employee extends BaseEntity implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "emoloyee_roles",
+            name = "EMPLOYEE_ROLES",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )

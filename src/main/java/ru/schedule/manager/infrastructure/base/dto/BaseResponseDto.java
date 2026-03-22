@@ -37,4 +37,8 @@ public abstract class BaseResponseDto implements Serializable {
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	protected LocalDateTime updateDateTime;
 
+	protected String createdBy;
+
+	protected String updatedBy;
+
 }

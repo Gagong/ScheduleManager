@@ -155,6 +155,8 @@ export default {
     subgroup(value) {
       if (value) {
         this.getFilledSchedule()
+      } else {
+        this.getFilledSchedule()
       }
     },
     department(value) {
@@ -249,7 +251,6 @@ export default {
                 <v-autocomplete
                     v-model="subgroup"
                     :items="subgroups"
-                    :rules="[rules.required]"
                     dense
                     hide-details
                     item-text="value"
@@ -257,6 +258,7 @@ export default {
                     label="Выберите подгруппу"
                     no-data-text="Нет данных"
                     outlined
+                    clearable
                     return-object/>
               </v-col>
             </v-row>

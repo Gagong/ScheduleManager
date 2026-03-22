@@ -36,18 +36,18 @@ export default {
 				sortable: true,
 				value: 'discipline.value'
 			},
-			{
-				text: 'Создано',
-				align: 'center',
-				sortable: true,
-				value: 'createdDateTime'
-			},
-			{
-				text: 'Изменено',
-				align: 'center',
-				sortable: true,
-				value: 'updateDateTime'
-			},
+      {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdDateTime'
+      },
+      {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdBy'
+      },
       {
         text: 'Действия',
         value: 'actions',
@@ -115,8 +115,7 @@ export default {
   <v-container fluid>
     <Navigator/>
     <v-row>
-      <v-col cols="1"/>
-      <v-col cols="10">
+      <v-col cols="12">
         <v-card flat>
           <v-card-title>
             Настройка связей преподавателя
@@ -209,7 +208,6 @@ export default {
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="1"/>
     </v-row>
   </v-container>
 </template>

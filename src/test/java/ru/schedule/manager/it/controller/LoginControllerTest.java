@@ -10,11 +10,11 @@ import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import ru.schedule.manager.business.controller.LoginController;
+import ru.schedule.manager.business.controller.EmployeeController;
 import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.repository.EmployeeRepository;
 import ru.schedule.manager.infrastructure.base.request.LoginRequest;
-import ru.schedule.manager.infrastructure.base.response.EmployeeResponse;
+import ru.schedule.manager.infrastructure.base.response.EmployeeDto;
 import ru.schedule.manager.infrastructure.base.service.CustomUserDetailsService;
 
 import java.util.Optional;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 class LoginControllerTest {
 
     @InjectMocks
-    private LoginController loginController;
+    private EmployeeController loginController;
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -44,7 +44,7 @@ class LoginControllerTest {
     void login_ShouldReturnOkResponse() {
         when(employeeRepository.findByUsername(any())).thenReturn(Optional.of(new Employee()));
 
-        final ResponseEntity<EmployeeResponse> response = loginController.login(new LoginRequest("admin", "admin"));
+        final ResponseEntity<EmployeeDto> response = loginController.login(new LoginRequest("admin", "admin"));
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());

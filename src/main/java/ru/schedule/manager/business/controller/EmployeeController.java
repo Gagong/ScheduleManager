@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.request.LoginRequest;
 import ru.schedule.manager.infrastructure.base.request.RegisterRequest;
-import ru.schedule.manager.infrastructure.base.response.EmployeeResponse;
+import ru.schedule.manager.infrastructure.base.response.EmployeeDto;
 import ru.schedule.manager.infrastructure.base.service.CustomUserDetailsService;
 import ru.schedule.manager.infrastructure.base.service.EmployeeService;
 
@@ -26,8 +26,8 @@ import static ru.schedule.manager.infrastructure.configuration.properties.Global
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(DEFAULT_API_PATH + "login")
-public class LoginController {
+@RequestMapping(DEFAULT_API_PATH + "employee")
+public class EmployeeController {
 
 	private final AuthenticationManager authenticationManager;
 
@@ -36,7 +36,7 @@ public class LoginController {
 	private final EmployeeService userService;
 
 	@PostMapping("/login")
-	public ResponseEntity<EmployeeResponse> login(@Validated @RequestBody final LoginRequest loginRequest) {
+	public ResponseEntity<EmployeeDto> login(@Validated @RequestBody final LoginRequest loginRequest) {
 		log.info("Login attempt for user: {}", loginRequest.getUsername());
 
 		final Authentication authentication = authenticationManager.authenticate(
@@ -50,23 +50,23 @@ public class LoginController {
 
 		final Employee user = userDetailsService.loadUserEntityByUsername(loginRequest.getUsername());
 
-		return ResponseEntity.ok(EmployeeResponse.fromEmployee(user));
+		return ResponseEntity.ok(EmployeeDto.fromEntity(user));
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/register")
-	public ResponseEntity<EmployeeResponse> register(@Validated @RequestBody final RegisterRequest registerRequest) {
+	public ResponseEntity<EmployeeDto> register(@Validated @RequestBody final RegisterRequest registerRequest) {
 		return ResponseEntity.ok(userService.registerUser(registerRequest));
 	}
 
 	@GetMapping("/me")
-	public ResponseEntity<EmployeeResponse> getCurrentUser(final Authentication authentication) {
+	public ResponseEntity<EmployeeDto> getCurrentUser(final Authentication authentication) {
 		if (authentication == null) {
 			return ResponseEntity.ok(null);
 		}
 
 		final Employee user = (Employee) authentication.getPrincipal();
-		return ResponseEntity.ok(EmployeeResponse.fromEmployee(user));
+		return ResponseEntity.ok(EmployeeDto.fromEntity(user));
 	}
 
 }

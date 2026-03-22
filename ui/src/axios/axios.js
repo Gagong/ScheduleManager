@@ -56,7 +56,7 @@ function createApiInstance(endpoint) {
 	return instance
 }
 
-export const LOGIN_API = createApiInstance('/login')
+export const EMPLOYEE_API = createApiInstance('/employee')
 export const DICTIONARY_API = createApiInstance('/dictionary')
 export const SCHEDULE_API = createApiInstance('/schedule')
 export const PROFESSOR_API = createApiInstance('/professor')

@@ -36,6 +36,8 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 			.id(entity.getId())
 			.createdDateTime(entity.getCreatedDateTime())
 			.updateDateTime(entity.getUpdateDateTime())
+			.createdBy(entity.getCreatedByEmployee().getFullName())
+			.updatedBy(entity.getUpdatedByEmployee().getFullName())
 			.build();
 	}
 

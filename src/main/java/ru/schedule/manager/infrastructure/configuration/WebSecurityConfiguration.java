@@ -127,10 +127,16 @@ public class WebSecurityConfiguration {
 				).permitAll()
 
 				// Аутентификация
-				.antMatchers("/api/login/**").permitAll()
+				.antMatchers("/api/employee/**").permitAll()
 
 				// Регистрация только для админов
 				.antMatchers("/api/profile/register").hasRole("ADMIN")
+
+				//WebSocket
+				.antMatchers("/ws").permitAll()
+				.antMatchers("/wss").permitAll()
+				.antMatchers("/ws/**").permitAll()
+				.antMatchers("/wss/**").permitAll()
 
 				// Все остальные запросы требуют аутентификации
 				.anyRequest().authenticated()

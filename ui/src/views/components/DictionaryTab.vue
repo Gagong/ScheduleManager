@@ -51,12 +51,24 @@ export default {
 				sortable: true,
 				value: 'createdDateTime'
 			},
+      {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdBy'
+      },
 			{
 				text: 'Изменено',
 				align: 'center',
 				sortable: true,
 				value: 'updateDateTime'
 			},
+      {
+        text: 'Изменено',
+        align: 'center',
+        sortable: true,
+        value: 'updatedBy'
+      },
       {
         text: 'Действия',
         value: 'actions',
@@ -96,11 +108,23 @@ export default {
         value: 'createdDateTime'
       },
       {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdBy'
+      },
+      {
         text: 'Изменено',
         align: 'center',
         sortable: true,
         value: 'updateDateTime'
-      }
+      },
+      {
+        text: 'Изменено',
+        align: 'center',
+        sortable: true,
+        value: 'updatedBy'
+      },
     ],
 		items: [],
     archiveItems: [],

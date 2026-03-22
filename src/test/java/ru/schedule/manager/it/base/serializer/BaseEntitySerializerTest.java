@@ -43,7 +43,7 @@ class BaseEntitySerializerTest {
 
     private static class TestEntity extends BaseEntity {
         TestEntity(final Long id) {
-            super(id, null, null);
+            super(id, 1L, null, null, null, null, 1L);
         }
     }
 

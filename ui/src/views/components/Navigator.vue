@@ -29,7 +29,7 @@
 
 import store from "@/store/store";
 import router from "@/router/router";
-import {LOGIN_API, PROFILE_API} from "@/axios/axios";
+import {EMPLOYEE_API, PROFILE_API} from "@/axios/axios";
 import logo from '@/assets/logo.png'
 
 export default {
@@ -61,7 +61,7 @@ export default {
       })
     },
     getUserData() {
-      LOGIN_API.get('me').then(resp => this.username = resp.data.fullName);
+      EMPLOYEE_API.get('me').then(resp => this.username = resp.data.fullName);
     }
   }
 }
