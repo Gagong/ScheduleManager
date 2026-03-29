@@ -48,6 +48,7 @@ public class EmployeeDto extends BaseResponseDto {
                 .email(employee.getEmail())
                 .firstName(employee.getFirstName())
                 .lastName(employee.getLastName())
+                .middleName(employee.getMiddleName())
                 .fullName(employee.getFullName())
                 .roles(employee.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
                 .enabled(employee.isEnabled())

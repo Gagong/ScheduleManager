@@ -1,6 +1,6 @@
 <script>
 
-import {DICTIONARY_API, PROFESSOR_API, SCHEDULE_API} from "@/axios/axios";
+import {DICTIONARY_API, makeDownloadAction, PROFESSOR_API, SCHEDULE_API} from "@/axios/axios";
 import getRowColor, {
   arrayToUriParams,
   FRIDAY,
@@ -77,6 +77,8 @@ export default {
     group: null,
     subgroup: null,
     groups: [],
+
+    fileDownloading: false,
 	}),
 	methods: {
 		getRowColor,
@@ -191,6 +193,53 @@ export default {
         ).then(resp => {
           this.items = resp.data.rows
         })
+      }
+    },
+
+    async downloadFile() {
+      this.fileDownloading = true
+
+      try {
+        const response = await SCHEDULE_API.post(
+            'getSingleSchedule',
+            {
+              semester: this.semester,
+              faculty: this.faculty,
+              group: this.group,
+              subgroup: this.subgroup
+            },
+            {
+              params: {
+                editable: false
+              },
+              responseType: 'blob',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+        )
+        makeDownloadAction(response, 'Расписание.xlsx')
+      } finally {
+        this.fileDownloading = false
+      }
+    },
+    async downloadAllFile() {
+      this.fileDownloading = true
+
+      try {
+        const response = await SCHEDULE_API.post(
+            'getAllSchedule',
+            {},
+            {
+              responseType: 'blob',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+        )
+        makeDownloadAction(response, 'Расписание.zip')
+      } finally {
+        this.fileDownloading = false
       }
     }
 	},
@@ -355,7 +404,34 @@ export default {
           </v-card-text>
         </v-card>
       </v-dialog>
-      <v-card-title>Составление расписания</v-card-title>
+      <v-card-title>
+        Составление расписания
+        <v-spacer></v-spacer>
+        <v-btn
+            class="ma-2"
+            v-if="(this.items != null && this.items !== 'undefined' && this.items.length !== 0)"
+            :loading="fileDownloading"
+            :disabled="fileDownloading"
+            color="primary"
+            @click="downloadFile"
+        >
+          Скачать
+          <template v-slot:loader>
+            <v-progress-circular indeterminate color="white" size="20" />
+          </template>
+        </v-btn>
+        <v-btn
+            :loading="fileDownloading"
+            :disabled="fileDownloading"
+            color="primary"
+            @click="downloadAllFile"
+        >
+          Скачать все
+          <template v-slot:loader>
+            <v-progress-circular indeterminate color="white" size="20" />
+          </template>
+        </v-btn>
+      </v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="4">

@@ -24,4 +24,7 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long
 
 	List<ScheduleItem> findAllByRowAndColAndTimesAndSemesterAndClassroomIsNotNullAndProfessorIsNotNull(Integer row, Integer col, Dictionary times, Dictionary semester);
 
+	@Query(value = "select distinct semester, faculty, student_group from schedule_item", nativeQuery = true)
+	List<Object[]> getExistedSchedules();
+
 }

@@ -19,9 +19,9 @@ public class GlobalProperties {
 
 	public static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:8080", "https://localhost:8080");
 
-	public static final List<String> ALLOWED_METHODS = List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH");
+	public static final List<String> ALLOWED_METHODS = List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
 
-	public static final List<String> ALLOWED_HEADERS = List.of("Authorization", "Cache-Control", "Content-Type", "Access-Control-Allow-Origin");
+	public static final List<String> ALLOWED_HEADERS = List.of("Authorization", "Cache-Control", "Content-Type", "Content-Disposition");
 
 	public static final DateTimeFormatter DTO_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 

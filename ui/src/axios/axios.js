@@ -56,6 +56,30 @@ function createApiInstance(endpoint) {
 	return instance
 }
 
+export function makeDownloadAction(response, defaultFileName) {
+	let filename = defaultFileName
+	const contentDisposition = response.headers.get('content-disposition');
+	if (contentDisposition) {
+		const match = contentDisposition.match(/filename\*=UTF-8''(.+?)(?:;|$)/)
+		if (match) {
+			filename = decodeURIComponent(match[1])
+		} else {
+			const match2 = contentDisposition.match(/filename="?(.+?)"?$/i)
+			if (match2) {
+				filename = match2[1]
+			}
+		}
+	}
+	const url = window.URL.createObjectURL(response.data)
+	const link = document.createElement('a')
+	link.href = url
+	link.setAttribute('download', filename)
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+	window.URL.revokeObjectURL(url)
+}
+
 export const EMPLOYEE_API = createApiInstance('/employee')
 export const DICTIONARY_API = createApiInstance('/dictionary')
 export const SCHEDULE_API = createApiInstance('/schedule')

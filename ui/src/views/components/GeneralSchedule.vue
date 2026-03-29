@@ -9,7 +9,7 @@ import getRowColor, {
   TUESDAY,
   WEDNESDAY
 } from "@/constants/constants";
-import {DICTIONARY_API, PROFESSOR_API, SCHEDULE_API} from "@/axios/axios";
+import {DICTIONARY_API, makeDownloadAction, PROFESSOR_API, SCHEDULE_API} from "@/axios/axios";
 import Navigator from "@/views/components/Navigator.vue";
 
 export default {
@@ -42,6 +42,8 @@ export default {
     departments: [],
     professor: null,
     professors: [],
+
+    fileDownloading: false,
 	}),
 	mounted() {
     DICTIONARY_API.get(`getAllByTypes?${arrayToUriParams(['LESSON_TIME','SEMESTER','FACULTY','GROUP','DEPARTMENT','PROFESSOR','SUBGROUP'], "types")}`)
@@ -100,7 +102,6 @@ export default {
               }
           ).then(resp => {
             this.items = resp.data.rows
-            //this.semester = resp.data.semester
           })
         }
       } else {
@@ -118,9 +119,59 @@ export default {
               }
           ).then(resp => {
             this.items = resp.data.rows
-            //this.semester = resp.data.semester
           })
         }
+      }
+    },
+    async downloadFile() {
+      this.fileDownloading = true
+
+      try {
+        if (this.typeSelector === 'student') {
+          if (this.semester !== null && this.faculty !== null && this.group !== null) {
+            const response = await SCHEDULE_API.post(
+                'getSingleSchedule',
+                {
+                  semester: this.semester,
+                  faculty: this.faculty,
+                  group: this.group,
+                  subgroup: this.subgroup
+                },
+                {
+                  params: {
+                    editable: false
+                  },
+                  responseType: 'blob',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                }
+            )
+            makeDownloadAction(response, 'Расписание.xlsx')
+          }
+        } else {
+          if (this.professor !== null) {
+            const response = await SCHEDULE_API.post(
+                'getSingleSchedule',
+                {
+                  semester: this.semester,
+                  professor: this.professor,
+                },
+                {
+                  params: {
+                    editable: false
+                  },
+                  responseType: 'blob',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                }
+            )
+            makeDownloadAction(response, 'Расписание.xlsx')
+          }
+        }
+      } finally {
+        this.fileDownloading = false
       }
     }
   },
@@ -190,7 +241,23 @@ export default {
 	<v-container fluid>
     <Navigator/>
     <v-card>
-      <v-card-title>{{semester !== null ? semester.value : ""}}</v-card-title>
+      <v-card-title>
+        {{semester !== null ? semester.value : ""}}
+        <v-spacer></v-spacer>
+        <v-btn
+            v-if="(this.items != null && this.items !== 'undefined' && this.items.length !== 0) &&
+             ((this.typeSelector === 'student' && this.semester !== null && this.faculty !== null && this.group !== null) || (this.typeSelector === 'professor' && this.professor !== null))"
+            :loading="fileDownloading"
+            :disabled="fileDownloading"
+            color="primary"
+            @click="downloadFile"
+        >
+          Скачать
+          <template v-slot:loader>
+            <v-progress-circular indeterminate color="white" size="20" />
+          </template>
+        </v-btn>
+      </v-card-title>
       <v-card-text>
         <!--Форма поиска-->
         <div>

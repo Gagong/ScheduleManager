@@ -42,6 +42,7 @@ public class WebSecurityConfiguration {
 		configuration.setAllowedOrigins(ALLOWED_ORIGINS);
 		configuration.setAllowedMethods(ALLOWED_METHODS);
 		configuration.setAllowedHeaders(ALLOWED_HEADERS);
+		configuration.setExposedHeaders(ALLOWED_HEADERS);
 		configuration.setAllowCredentials(true);
 
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -120,6 +121,7 @@ public class WebSecurityConfiguration {
 				// Публичные POST запросы
 				.antMatchers(HttpMethod.POST,
 						"/api/schedule/getSchedule",
+						"/api/schedule/getSingleSchedule",
 						"/api/schedule/getFreeClassRoomsAndProfessors",
 						"/api/professor/getProfessorDisciplines",
 						"/api/professor/getProfessorDepartment",

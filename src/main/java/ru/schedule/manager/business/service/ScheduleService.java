@@ -2,36 +2,55 @@ package ru.schedule.manager.business.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import ru.schedule.manager.business.dataholder.ScheduleColDataHolder;
+import ru.schedule.manager.business.dataholder.ScheduleDataHolder;
+import ru.schedule.manager.business.dataholder.ScheduleRowDataHolder;
 import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
 import ru.schedule.manager.business.dto.ScheduleItemDto;
 import ru.schedule.manager.business.entity.ScheduleItem;
 import ru.schedule.manager.business.exception.EntityNotFoundException;
 import ru.schedule.manager.business.exception.ExceptionMessageUtils;
 import ru.schedule.manager.business.repository.ScheduleItemRepository;
+import ru.schedule.manager.business.request.GetScheduleRequest;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
 import ru.schedule.manager.infrastructure.base.entity.Employee;
 import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.zip.Deflater;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static ru.schedule.manager.business.dictionary.AdministeredDictionaryType.CLASSROOM;
 import static ru.schedule.manager.business.dictionary.AdministeredDictionaryType.PROFESSOR;
 import static ru.schedule.manager.business.dictionary.SemesterType.AUTUMN;
 import static ru.schedule.manager.business.dictionary.SemesterType.SPRING;
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
+import static ru.schedule.manager.business.service.ExcelService.buildFileHttpEntity;
 import static ru.schedule.manager.business.utils.DateTimeUtils.isAfterOrEquals;
 import static ru.schedule.manager.business.utils.DateTimeUtils.isBeforeOrEquals;
 import static ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary.defaultSubgroup;
@@ -43,6 +62,8 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 	private final AdministeredDictionaryService administeredDictionaryService;
 
 	private final ScheduleItemRepository scheduleItemRepository;
+
+	private final ExcelService excelService;
 
 	@Override
 	public ScheduleItemDto fromEntity(final ScheduleItem entity) {
@@ -140,6 +161,98 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		});
 	}
 
+	//Not a good way, but its works ;)
+	public ScheduleDataHolder getSchedule(final GetScheduleRequest request, final boolean editable) {
+		final Map<Integer, Dictionary> times = administeredDictionaryService.getAllEntitiesByType(AdministeredDictionaryType.LESSON_TIME, true)
+				.stream()
+				.collect(Collectors.toMap(Dictionary::getDisplayOrder, Function.identity()));
+		final DictionaryDto subgroup = ObjectUtils.firstNonNull(request.getSubgroup(), administeredDictionaryService.fromEntity(defaultSubgroup()));
+		if (ObjectUtils.allNotNull(request.getSemester(), request.getFaculty(), request.getGroup(), subgroup)) {
+			final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
+			for (int r = 0; r < 2; r++) {
+				final ScheduleRowDataHolder scheduleRowDataHolder = new ScheduleRowDataHolder(new LinkedList<>());
+				for (int c = 0; c < 6; c++) {
+					final List<ScheduleItemDto> list = new LinkedList<>();
+					for (int i = 0; i < 7; i++) {
+						list.add(
+								this.findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubGroup(
+										r,
+										c,
+										times.get(i),
+										administeredDictionaryService.getOneAsEntity(request.getSemester()),
+										administeredDictionaryService.getOneAsEntity(request.getFaculty()),
+										administeredDictionaryService.getOneAsEntity(request.getGroup()),
+										administeredDictionaryService.getOneAsEntity(subgroup),
+										editable
+								)
+						);
+					}
+					scheduleRowDataHolder.getCols().add(new ScheduleColDataHolder(list));
+				}
+				scheduleRowDataHolders.add(scheduleRowDataHolder);
+			}
+			return new ScheduleDataHolder(
+					request.getSemester(),
+					scheduleRowDataHolders
+			);
+		} else if (ObjectUtils.allNotNull(request.getSemester(), request.getProfessor())) {
+			final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
+			for (int r = 0; r < 2; r++) {
+				final ScheduleRowDataHolder scheduleRowDataHolder = new ScheduleRowDataHolder(new LinkedList<>());
+				for (int c = 0; c < 6; c++) {
+					final List<ScheduleItemDto> list = new LinkedList<>();
+					for (int i = 0; i < 7; i++) {
+						list.add(
+								this.findByRowAndColAndTimesAndSemesterAndProfessor(
+										r,
+										c,
+										times.get(i),
+										administeredDictionaryService.getOneAsEntity(request.getSemester()),
+										administeredDictionaryService.getOneAsEntity(request.getProfessor()),
+										editable
+								)
+						);
+					}
+					scheduleRowDataHolder.getCols().add(new ScheduleColDataHolder(list));
+				}
+				scheduleRowDataHolders.add(scheduleRowDataHolder);
+			}
+			return new ScheduleDataHolder(
+					request.getSemester(),
+					scheduleRowDataHolders
+			);
+		} else {
+			final Dictionary currentSemester = this.getCurrentSemester();
+			final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
+			for (int r = 0; r < 2; r++) {
+				final ScheduleRowDataHolder scheduleRowDataHolder = new ScheduleRowDataHolder(new LinkedList<>());
+				for (int c = 0; c < 6; c++) {
+					final List<ScheduleItemDto> list = new LinkedList<>();
+					for (int i = 0; i < 7; i++) {
+						list.add(
+								this.fromEntity(
+										ScheduleItem.builder()
+												.id(ThreadLocalRandom.current().nextLong(100000000L, 1000000000L))
+												.semester(currentSemester)
+												.row(r)
+												.col(c)
+												.times(times.get(i))
+												.build()
+												.setEditable(editable)
+								)
+						);
+					}
+					scheduleRowDataHolder.getCols().add(new ScheduleColDataHolder(list));
+				}
+				scheduleRowDataHolders.add(scheduleRowDataHolder);
+			}
+			return new ScheduleDataHolder(
+					administeredDictionaryService.fromEntity(currentSemester),
+					scheduleRowDataHolders
+			);
+		}
+	}
+
 	public ScheduleItemDto findByRowAndColAndTimesAndSemesterAndFacultyAndGroupAndSubGroup(final Integer row,
 																						   final Integer col,
 																						   final Dictionary times,
@@ -230,6 +343,75 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 				CLASSROOM, allClassRooms,
 				PROFESSOR, allProfessors
 		);
+	}
+
+	public ResponseEntity<StreamingResponseBody> getSingleSchedule(final GetScheduleRequest request) {
+		final ScheduleDataHolder holder = this.getSchedule(request, false);
+		return buildFileHttpEntity(
+				outputStream -> {
+					final Workbook workbook = excelService.getSingleSchedule(holder);
+					workbook.write(outputStream);
+					workbook.close();
+				},
+				holder.getSemester().getValue().replaceAll("[\\\\/:*?\"<>|]", "_") + Optional.ofNullable(request.getGroup()).map(DictionaryDto::getValue).orElse(StringUtils.EMPTY) + ".xlsx",
+				new MediaType(
+						"application",
+						"vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+						StandardCharsets.UTF_8
+				)
+		);
+	}
+
+	public ResponseEntity<StreamingResponseBody> getAllSchedule() {
+		final List<Object[]> existedSchedules = scheduleItemRepository.getExistedSchedules();
+		if (existedSchedules.isEmpty()) {
+			throw new IllegalArgumentException("Не найдено ни одного сохраненного расписания");
+		} else {
+			return buildFileHttpEntity(
+					outputStream -> {
+						try (ZipOutputStream zipOut = new ZipOutputStream(outputStream)) {
+							zipOut.setLevel(Deflater.NO_COMPRESSION);
+							existedSchedules.stream()
+									.map(objects -> new GetScheduleRequest(
+											administeredDictionaryService.fromEntity(administeredDictionaryService.getOneAsEntity(((BigInteger) objects[0]).longValue())),
+											administeredDictionaryService.fromEntity(administeredDictionaryService.getOneAsEntity(((BigInteger) objects[1]).longValue())),
+											administeredDictionaryService.fromEntity(administeredDictionaryService.getOneAsEntity(((BigInteger) objects[2]).longValue()))
+									))
+									.forEach(value -> {
+										final ScheduleDataHolder holder = this.getSchedule(value, false);
+										final Workbook workbook = excelService.getSingleSchedule(holder);
+										try {
+											zipOut.putNextEntry(new ZipEntry(
+															holder.getSemester().getValue().replaceAll("[\\\\/:*?\"<>|]", "_") +
+																	Optional.ofNullable(value.getGroup())
+																			.map(DictionaryDto::getValue)
+																			.orElse(StringUtils.EMPTY) +
+																	".xlsx"
+													)
+											);
+											workbook.write(zipOut);
+											zipOut.closeEntry();
+											workbook.close();
+										} catch (final IOException e) {
+											throw new UncheckedIOException(e);
+										} finally {
+											try {
+												workbook.close();
+											} catch (final IOException e) {
+												//Empty
+											}
+										}
+									});
+						}
+					},
+					"Расписание.zip",
+					new MediaType(
+							"application",
+							"zip",
+							StandardCharsets.UTF_8
+					)
+			);
+		}
 	}
 
 }
