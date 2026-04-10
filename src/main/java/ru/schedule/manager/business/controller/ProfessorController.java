@@ -17,7 +17,6 @@ import ru.schedule.manager.business.service.ProfessorDisciplineService;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 
@@ -59,7 +58,7 @@ public class ProfessorController {
 	public List<DictionaryDto> getDepartmentProfessors(@RequestBody final DictionaryDto department) {
 		return professorDepartmentService.getDepartmentProfessors(department).stream()
 				.map(ProfessorDepartmentLnkDto::getProfessor)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@PreAuthorize("isAuthenticated()")

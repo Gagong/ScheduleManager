@@ -16,7 +16,6 @@ import ru.schedule.manager.infrastructure.base.service.BaseServiceAware;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static ru.schedule.manager.business.exception.ExceptionMessageUtils.ENTITY_NOT_FOUND_EXCEPTION_PATTERN;
 
@@ -47,7 +46,7 @@ public class ProfessorDisciplineService implements BaseServiceAware<ProfessorDis
 			.filter(Objects::nonNull)
 			.map(this::fromEntity)
 			.sorted(Comparator.comparing(value -> value.getDiscipline().getValue()))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	@Override

@@ -27,4 +27,7 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Long
 	@Query(value = "select distinct semester, faculty, student_group from schedule_item", nativeQuery = true)
 	List<Object[]> getExistedSchedules();
 
+	@Query(value = "select distinct semester from schedule_item", nativeQuery = true)
+	List<Long> getExistedSemesters();
+
 }

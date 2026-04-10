@@ -49,7 +49,7 @@ export default {
     DICTIONARY_API.get(`getAllByTypes?${arrayToUriParams(['LESSON_TIME','SEMESTER','FACULTY','GROUP','DEPARTMENT','PROFESSOR','SUBGROUP'], "types")}`)
     .then(resp => {
       this.times = resp.data.LESSON_TIME
-      this.semesters = resp.data.SEMESTER
+      //this.semesters = resp.data.SEMESTER
       this.faculties = resp.data.FACULTY
       this.groups = resp.data.GROUP
       this.subgroups = resp.data.SUBGROUP
@@ -66,6 +66,7 @@ export default {
     ).then(resp => {
       this.items = resp.data.rows
       this.semester = resp.data.semester
+      this.semesters = resp.data.semesters
     }))
 	},
   methods: {
@@ -82,6 +83,7 @@ export default {
       ).then(resp => {
         this.items = resp.data.rows
         this.semester = resp.data.semester
+        this.semesters = resp.data.semesters
       })
     },
     getFilledSchedule() {

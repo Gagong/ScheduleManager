@@ -495,7 +495,7 @@ export default {
           <v-card-title class="d-flex justify-space-between align-center">
             <div>
               <v-icon large color="primary" class="mr-2">mdi-account-group</v-icon>
-              <span class="text-h6">Активные менеджеры</span>
+              <span class="text-h6">Список менеджеров</span>
             </div>
             <v-chip color="primary" outlined>
               <v-icon left>mdi-account</v-icon>

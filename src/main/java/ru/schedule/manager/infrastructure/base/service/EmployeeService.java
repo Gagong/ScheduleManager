@@ -15,7 +15,6 @@ import ru.schedule.manager.infrastructure.base.request.EmployeeDataRequest;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,7 +60,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> getEmployees() {
-        return employeeRepository.findAll().stream().map(EmployeeDto::fromEntity).collect(Collectors.toList());
+        return employeeRepository.findAll().stream().map(EmployeeDto::fromEntity).toList();
     }
 
     @Transactional

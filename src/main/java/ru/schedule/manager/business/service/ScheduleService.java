@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -94,7 +95,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 			.filter(Objects::nonNull)
 			.map(this::fromEntity)
 			.sorted(Comparator.comparing(value -> value.getTimes().getDisplayOrder()))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	@Override
@@ -167,6 +168,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 				.stream()
 				.collect(Collectors.toMap(Dictionary::getDisplayOrder, Function.identity()));
 		final DictionaryDto subgroup = ObjectUtils.firstNonNull(request.getSubgroup(), administeredDictionaryService.fromEntity(defaultSubgroup()));
+		final Set<DictionaryDto> existedSemesters = scheduleItemRepository.getExistedSemesters().stream().map(administeredDictionaryService::getOneAsEntity).map(administeredDictionaryService::fromEntity).collect(Collectors.toSet());
 		if (ObjectUtils.allNotNull(request.getSemester(), request.getFaculty(), request.getGroup(), subgroup)) {
 			final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
 			for (int r = 0; r < 2; r++) {
@@ -193,6 +195,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 			}
 			return new ScheduleDataHolder(
 					request.getSemester(),
+					existedSemesters.isEmpty() ? Set.of(request.getSemester()) : existedSemesters,
 					scheduleRowDataHolders
 			);
 		} else if (ObjectUtils.allNotNull(request.getSemester(), request.getProfessor())) {
@@ -219,6 +222,7 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 			}
 			return new ScheduleDataHolder(
 					request.getSemester(),
+					existedSemesters.isEmpty() ? Set.of(request.getSemester()) : existedSemesters,
 					scheduleRowDataHolders
 			);
 		} else {
@@ -246,8 +250,10 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 				}
 				scheduleRowDataHolders.add(scheduleRowDataHolder);
 			}
+			final DictionaryDto semester = administeredDictionaryService.fromEntity(currentSemester);
 			return new ScheduleDataHolder(
-					administeredDictionaryService.fromEntity(currentSemester),
+					semester,
+					existedSemesters.isEmpty() ? Set.of(semester) : existedSemesters,
 					scheduleRowDataHolders
 			);
 		}
@@ -332,11 +338,11 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 		final List<DictionaryDto> busyClassRooms = getFilledSchedule.stream()
 				.map(ScheduleItem::getClassroom)
 				.map(administeredDictionaryService::fromEntity)
-				.collect(Collectors.toList());
+				.toList();
 		final List<DictionaryDto> busyProfessors = getFilledSchedule.stream()
 				.map(ScheduleItem::getProfessor)
 				.map(administeredDictionaryService::fromEntity)
-				.collect(Collectors.toList());
+				.toList();
 		allClassRooms.removeIf(busyClassRooms::contains);
 		allProfessors.removeIf(busyProfessors::contains);
 		return Map.of(
@@ -382,10 +388,12 @@ public class ScheduleService implements BaseServiceAware<ScheduleItem, ScheduleI
 										final Workbook workbook = excelService.getSingleSchedule(holder);
 										try {
 											zipOut.putNextEntry(new ZipEntry(
-															holder.getSemester().getValue().replaceAll("[\\\\/:*?\"<>|]", "_") +
+															holder.getSemester().getValue().replaceAll("[\\\\/:*?\"<>|]", "_")
+																	+
 																	Optional.ofNullable(value.getGroup())
 																			.map(DictionaryDto::getValue)
-																			.orElse(StringUtils.EMPTY) +
+																			.orElse(StringUtils.EMPTY)
+																	+
 																	".xlsx"
 													)
 											);

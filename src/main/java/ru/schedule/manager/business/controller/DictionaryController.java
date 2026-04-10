@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.schedule.manager.infrastructure.base.dictionary.administered.IAdministeredDictionary.dictionary;
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 
 @Slf4j
@@ -70,12 +71,12 @@ public class DictionaryController {
 
 	@GetMapping("containsKey")
 	public Boolean containsKey(@RequestParam final AdministeredDictionaryType type, @RequestParam final String key) {
-		return administeredDictionaryService.containsKey(type, key);
+		return dictionary().containsKey(type, key);
 	}
 
 	@GetMapping("containsValue")
 	public Boolean containsValue(@RequestParam final AdministeredDictionaryType type, @RequestParam final String value) {
-		return administeredDictionaryService.containsValue(type, value);
+		return dictionary().containsValue(type, value);
 	}
 
 	@GetMapping("getAllTypes")
@@ -87,7 +88,7 @@ public class DictionaryController {
 	public List<SimpleDictionary> getAll() {
 		return Arrays.stream(AdministeredDictionaryType.values())
 			.map(type -> new SimpleDictionary(type.getDictionaryKey(), type.getDictionaryValue()))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 }

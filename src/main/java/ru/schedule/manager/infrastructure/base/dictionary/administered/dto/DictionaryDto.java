@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 
@@ -11,6 +12,7 @@ import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @SuperBuilder(toBuilder = true)
 public class DictionaryDto extends BaseResponseDto {
 
