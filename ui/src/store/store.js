@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {LOGIN_API} from "@/axios/axios";
+import {EMPLOYEE_API} from "@/axios/axios";
 
 Vue.use(Vuex)
 
@@ -8,9 +8,25 @@ export default new Vuex.Store({
 	state: {
 		username: localStorage.getItem('username') || '',
 		password: localStorage.getItem('password') || '',
+		email: localStorage.getItem('email') || '',
+		enabled: localStorage.getItem('enabled') || '',
+		firstName: localStorage.getItem('firstName') || '',
+		lastName: localStorage.getItem('lastName') || '',
+		middleName: localStorage.getItem('middleName') || '',
+		fullName: localStorage.getItem('fullName') || '',
+		id: localStorage.getItem('id') || '',
+		roles: localStorage.getItem('roles') || [],
 		isAuthenticated: false,
+		messages: [],
+		notifications: []
 	},
 	mutations: {
+		ADD_MESSAGE(state, message) {
+			state.messages.push(message);
+		},
+		ADD_NOTIFICATION(state, notification) {
+			state.notifications.push(notification);
+		},
 		SET_CREDENTIALS(state, { username, password }) {
 			state.username = username;
 			state.password = password;
@@ -18,25 +34,69 @@ export default new Vuex.Store({
 			localStorage.setItem('password', password);
 		},
 		SET_AUTHENTICATED(state, value) {
-			state.isAuthenticated = value;
+			state = state && value
+			localStorage.setItem('email', value.email);
+			localStorage.setItem('enabled', value.enabled);
+			localStorage.setItem('firstName', value.firstName);
+			localStorage.setItem('lastName', value.lastName);
+			localStorage.setItem('middleName', value.middleName);
+			localStorage.setItem('fullName', value.fullName);
+			localStorage.setItem('id', value.id);
+			localStorage.setItem('roles', value.roles);
+			state.isAuthenticated = true;
 		},
 		CLEAR_CREDENTIALS(state) {
 			state.username = '';
 			state.password = '';
+			state.email = '';
+			state.enabled = '';
+			state.firstName = '';
+			state.lastName = '';
+			state.middleName = '';
+			state.fullName = '';
+			state.id = '';
+			state.roles = [];
 			state.isAuthenticated = false;
+
 			localStorage.removeItem('username');
 			localStorage.removeItem('password');
+			localStorage.removeItem('email');
+			localStorage.removeItem('enabled');
+			localStorage.removeItem('firstName');
+			localStorage.removeItem('lastName');
+			localStorage.removeItem('middleName');
+			localStorage.removeItem('fullName');
+			localStorage.removeItem('id');
+			localStorage.removeItem('roles');
 		},
 	},
 	actions: {
+		initWebSocket({ commit }) {
+			Vue.websocket.subscribe('/topic/messages', (data) => {
+				commit('ADD_MESSAGE', data);
+			});
+
+			Vue.websocket.subscribe('/topic/notifications', (data) => {
+				commit('ADD_NOTIFICATION', data);
+			});
+		},
+
+		// eslint-disable-next-line no-unused-vars
+		sendMessage({ commit }, message) {
+			Vue.websocket.send('/app/message', message);
+		},
 		// eslint-disable-next-line no-unused-vars
 		async login({ commit, state }, { username, password }) {
 			try {
 				commit('SET_CREDENTIALS', { username, password });
+				const body = {
+					username: username,
+					password: password
+				}
 
-				await LOGIN_API.get('');
+				const response = await EMPLOYEE_API.post('login', body);
+				commit('SET_AUTHENTICATED', response.data)
 
-				commit('SET_AUTHENTICATED', true);
 				return { success: true };
 			} catch (error) {
 				commit('CLEAR_CREDENTIALS');
@@ -53,16 +113,20 @@ export default new Vuex.Store({
 
 		async checkAuth({ state, commit }) {
 			if (!state.username || !state.password) {
-				commit('SET_AUTHENTICATED', false);
+				commit('CLEAR_CREDENTIALS');
 				return false;
 			}
 
 			try {
-				await LOGIN_API.get('');
-				commit('SET_AUTHENTICATED', true);
+				const body = {
+					username: state.username,
+					password: state.password
+				}
+				const response = await EMPLOYEE_API.post('/login', body);
+				commit('SET_AUTHENTICATED', response.data);
 				return true;
 			} catch (error) {
-				commit('SET_AUTHENTICATED', false);
+				commit('CLEAR_CREDENTIALS');
 				return false;
 			}
 		},
@@ -76,5 +140,6 @@ export default new Vuex.Store({
 		},
 		isAuthenticated: (state) => state.isAuthenticated,
 		username: (state) => state.username,
+		fullName: (state) => state.fullName,
 	},
 })

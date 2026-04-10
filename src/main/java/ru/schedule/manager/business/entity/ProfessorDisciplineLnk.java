@@ -1,21 +1,20 @@
 package ru.schedule.manager.business.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.schedule.manager.infrastructure.base.dictionary.administered.entity.Dictionary;
 import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
 import ru.schedule.manager.infrastructure.base.serializer.BaseEntitySerializer;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Getter
 @Setter

@@ -1,9 +1,9 @@
 package ru.schedule.manager.infrastructure.base.service;
 
-import java.util.List;
-
 import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 import ru.schedule.manager.infrastructure.base.entity.BaseEntity;
+
+import java.util.List;
 
 public interface BaseServiceAware<E extends BaseEntity, D extends BaseResponseDto> {
 

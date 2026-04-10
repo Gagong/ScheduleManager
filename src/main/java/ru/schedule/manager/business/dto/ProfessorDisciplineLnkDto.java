@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
 import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
 import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 
@@ -21,5 +20,9 @@ public class ProfessorDisciplineLnkDto extends BaseResponseDto {
 	private DictionaryDto discipline;
 
 	private DictionaryDto professor;
+
+	public ProfessorDisciplineLnkDto(final Long id) {
+		this.id = id;
+	}
 
 }

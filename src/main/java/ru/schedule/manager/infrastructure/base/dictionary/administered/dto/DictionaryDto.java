@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
 import ru.schedule.manager.infrastructure.base.dto.BaseResponseDto;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @SuperBuilder(toBuilder = true)
 public class DictionaryDto extends BaseResponseDto {
 
@@ -22,5 +23,9 @@ public class DictionaryDto extends BaseResponseDto {
 	private String key;
 
 	private String value;
+
+	private boolean active;
+
+	private int displayOrder;
 
 }

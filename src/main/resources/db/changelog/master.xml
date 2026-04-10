@@ -4,8 +4,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
         logicalFilePath="db/master.xml">
 
-    <includeAll path="db/changelog/initial/"/>
+    <!--Основные настройки БД-->
+    <include file="/initial/core.xml" relativeToChangelogFile="true"/>
+    <include file="/initial/sequences.xml" relativeToChangelogFile="true"/>
 
-    <includeAll path="db/changelog/latest/"/>
+    <!--Проливка изначальных значений-->
+    <include file="/latest/data.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

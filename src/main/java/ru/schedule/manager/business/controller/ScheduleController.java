@@ -1,24 +1,30 @@
 package ru.schedule.manager.business.controller;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import ru.schedule.manager.business.dataholder.ScheduleColDataHolder;
+import ru.schedule.manager.business.dataholder.ScheduleDataHolder;
 import ru.schedule.manager.business.dataholder.ScheduleRowDataHolder;
-import ru.schedule.manager.business.dictionary.Times;
+import ru.schedule.manager.business.dictionary.AdministeredDictionaryType;
 import ru.schedule.manager.business.dto.ScheduleItemDto;
+import ru.schedule.manager.business.request.GetScheduleRequest;
 import ru.schedule.manager.business.service.ScheduleService;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.dto.DictionaryDto;
+import ru.schedule.manager.infrastructure.base.dictionary.administered.service.AdministeredDictionaryService;
+
+import java.util.List;
+import java.util.Map;
 
 import static ru.schedule.manager.infrastructure.configuration.properties.GlobalProperties.DEFAULT_API_PATH;
 
@@ -30,27 +36,36 @@ public class ScheduleController {
 
 	private final ScheduleService scheduleService;
 
-	//Not a good way, but its works ;)
-	@GetMapping("getSchedule")
-	public List<ScheduleRowDataHolder> getSchedule() {
-		final List<ScheduleRowDataHolder> scheduleRowDataHolders = new LinkedList<>();
-		for (int r = 0; r < 2; r++) {
-			final ScheduleRowDataHolder scheduleRowDataHolder = new ScheduleRowDataHolder(new LinkedList<>());
-			for (int c = 0; c < 6; c++) {
-				final List<ScheduleItemDto> list = new LinkedList<>();
-				for (int i = 0; i < 7; i++) {
-					list.add(
-						scheduleService.findByRowAndColAndTimes(r, c, Times.values()[i])
-					);
-				}
-				scheduleRowDataHolder.getCols().add(new ScheduleColDataHolder(list));
-			}
-			scheduleRowDataHolders.add(scheduleRowDataHolder);
-		}
-		return scheduleRowDataHolders;
+	private final AdministeredDictionaryService administeredDictionaryService;
+
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("getAllSchedule")
+	public ResponseEntity<StreamingResponseBody> getAllSchedule() {
+		return scheduleService.getAllSchedule();
+	}
+
+	@PostMapping("getSingleSchedule")
+	public ResponseEntity<StreamingResponseBody> getSingleSchedule(@RequestBody final GetScheduleRequest request) {
+		return scheduleService.getSingleSchedule(request);
+	}
+
+	@PostMapping("getSchedule")
+	public ScheduleDataHolder getSchedule(@RequestBody final GetScheduleRequest request, @RequestParam(required = false, defaultValue = "true") final boolean editable) {
+		return scheduleService.getSchedule(request, editable);
+	}
+
+	@PostMapping("getFreeClassRoomsAndProfessors")
+	public Map<AdministeredDictionaryType, List<DictionaryDto>> getFreeClassRoomsAndProfessors(@RequestBody final ScheduleItemDto item) {
+		return scheduleService.getFreeClassRoomsAndProfessors(item);
+	}
+
+	@GetMapping("getCurrentSemester")
+	public DictionaryDto getCurrentSemester() {
+		return administeredDictionaryService.fromEntity(scheduleService.getCurrentSemester());
 	}
 
 	@PostMapping("save")
+	@PreAuthorize("isAuthenticated()")
 	public void save(@RequestBody final List<ScheduleRowDataHolder> rows) {
 		for (final ScheduleRowDataHolder row : rows) {
 			for (final ScheduleColDataHolder col : row.getCols()) {
@@ -66,6 +81,7 @@ public class ScheduleController {
 	}
 
 	@DeleteMapping("delete/{id}")
+	@PreAuthorize("isAuthenticated()")
 	public void delete(@PathVariable final Long id) {
 		scheduleService.delete(ScheduleItemDto.builder().id(id).build());
 	}

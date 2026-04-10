@@ -1,11 +1,13 @@
+/* eslint-disable */
 <script>
 import {DICTIONARY_API} from "@/axios/axios";
 
 export default {
-	props: ['dictionary'],
+	props: ['dictionary', 'canEdit'],
 	name: 'DictionaryTab',
 	data: () => ({
 		search: null,
+    archiveSearch: null,
 		key: null,
 		value: null,
 		selectedDto: {
@@ -49,16 +51,97 @@ export default {
 				sortable: true,
 				value: 'createdDateTime'
 			},
+      {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdBy'
+      },
 			{
 				text: 'Изменено',
 				align: 'center',
 				sortable: true,
 				value: 'updateDateTime'
 			},
+      {
+        text: 'Изменено',
+        align: 'center',
+        sortable: true,
+        value: 'updatedBy'
+      },
+      {
+        text: 'Действия',
+        value: 'actions',
+        align: 'center',
+        width: '10%'
+      },
 		],
+    archiveHeaders: [
+      {
+        text: 'ID',
+        align: 'center',
+        sortable: true,
+        value: 'id'
+      },
+      {
+        text: 'Тип',
+        align: 'center',
+        sortable: true,
+        value: 'type'
+      },
+      {
+        text: 'Ключ',
+        align: 'center',
+        sortable: true,
+        value: 'key'
+      },
+      {
+        text: 'Значение',
+        align: 'center',
+        sortable: true,
+        value: 'value'
+      },
+      {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdDateTime'
+      },
+      {
+        text: 'Создано',
+        align: 'center',
+        sortable: true,
+        value: 'createdBy'
+      },
+      {
+        text: 'Изменено',
+        align: 'center',
+        sortable: true,
+        value: 'updateDateTime'
+      },
+      {
+        text: 'Изменено',
+        align: 'center',
+        sortable: true,
+        value: 'updatedBy'
+      },
+    ],
 		items: [],
+    archiveItems: [],
 	}),
 	methods: {
+    archiveDictionary(item) {
+      const dto = {
+        id: item.id,
+        type: item.type,
+        key: item.key,
+        value: item.value,
+        active: false
+      }
+      DICTIONARY_API.patch('update', dto).then(() => {
+        this.fetchDictionaryTable()
+      })
+    },
 		addNewDictionaryValue() {
 			const dto = {
 				type: this.dictionary.key,
@@ -69,9 +152,6 @@ export default {
 				this.fetchDictionaryTable()
 				this.key = null;
 				this.value = null;
-			}).catch(e => {
-				console.log(e)
-				alert(e.response.data.message)
 			})
 		},
 		updateDictionaryValue() {
@@ -80,9 +160,6 @@ export default {
 				this.blocked = true;
 				this.key = null;
 				this.value = null;
-			}).catch(e => {
-				console.log(e)
-				alert(e.response.data.message)
 			})
 		},
 		updateValue(event, data) {
@@ -96,10 +173,14 @@ export default {
 				}
 			}).then(resp => {
 				this.items = resp.data
-			}).catch(e => {
-				console.log(e)
-				alert(e.response.data.message)
-			})
+			}).then(() => DICTIONARY_API.get('getAllByType', {
+        params: {
+          type: this.dictionary.key,
+          onlyActive: false
+        }
+      }).then(resp => {
+        this.archiveItems = resp.data
+      }))
 		}
 	},
 	mounted() {
@@ -114,12 +195,12 @@ export default {
 			{{ dictionary.value }}
 		</v-card-title>
 		<v-card-text>
-			<v-row>
+			<v-row v-if="canEdit">
 				<v-col cols="12">
 					<h4>Добавить новое значение</h4>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row v-if="canEdit">
 				<v-col cols="12">
 					<v-row>
 						<v-col cols="4">
@@ -163,7 +244,7 @@ export default {
 						<v-col cols="4">
 							<v-text-field
 									v-model="selectedDto.key"
-									:disabled="blocked"
+									:disabled="true"
 									:rules="[rules.keyCounter, rules.required]"
 									clearable
 									counter
@@ -192,6 +273,11 @@ export default {
 					</v-row>
 				</v-col>
 			</v-row>
+      <v-row>
+        <v-col cols="12">
+          <h4>Активные значения</h4>
+        </v-col>
+      </v-row>
 			<v-row>
 				<v-col cols="12">
 					<v-text-field v-model="search" append-icon="mdi-magnify" hide-details label="Поиск" single-line/>
@@ -206,10 +292,41 @@ export default {
 							:search="search"
 							class="elevation-1"
 							item-key="id"
-							no-data-text="Данные отсутствуют"
-							@dblclick:row="updateValue"/>
+              @dblclick:row="updateValue">
+            <!--eslint-disable-next-line-->
+            <template v-slot:item.actions="{ item }">
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon v-if="canEdit" small v-bind="attrs" v-on="on" @click="archiveDictionary(item)">mdi-delete</v-icon>
+                </template>
+                <span>Переместить в архив</span>
+              </v-tooltip>
+            </template>
+          </v-data-table>
 				</v-col>
 			</v-row>
+      <v-row v-if="canEdit">
+        <v-col cols="12">
+          <h4>Архивные значения</h4>
+        </v-col>
+      </v-row>
+      <v-row v-if="canEdit">
+        <v-col cols="12">
+          <v-text-field v-model="archiveSearch" append-icon="mdi-magnify" hide-details label="Поиск" single-line/>
+        </v-col>
+      </v-row>
+      <v-row v-if="canEdit">
+        <v-col cols="12">
+          <v-data-table
+              :headers="archiveHeaders"
+              :items="archiveItems"
+              :items-per-page="10"
+              :search="archiveSearch"
+              class="elevation-1"
+              item-key="id"
+          />
+        </v-col>
+      </v-row>
 		</v-card-text>
 	</v-card>
 </template>

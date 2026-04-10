@@ -4,34 +4,62 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd"
         logicalFilePath="db/changelog/initial/sequences.xml">
 
-    <changeSet id="LOAD DICTIONARIES" author="sm">
+    <changeSet id="LOAD EMPLOYEE" author="sm" runOnChange="true">
+        <dropIndex tableName="EMPLOYEE" indexName="EMPLOYEE_CREATED_BY_EMPLOYEE_ID_IDX"/>
+        <dropIndex tableName="EMPLOYEE" indexName="EMPLOYEE_UPDATED_BY_EMPLOYEE_ID_IDX"/>
+        <dropForeignKeyConstraint baseTableName="EMPLOYEE" constraintName="FK__EMPLOYEE__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"/>
+        <dropForeignKeyConstraint baseTableName="EMPLOYEE" constraintName="FK__EMPLOYEE__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"/>
+        <loadUpdateData tableName="EMPLOYEE" primaryKey="ID" separator=";" file="db/changelog/latest/data/EMPLOYEE.csv">
+            <column header="ID" name="ID" type="NUMERIC"/>
+            <column header="USERNAME" name="USERNAME" type="STRING"/>
+            <column header="PASSWORD" name="PASSWORD" type="STRING"/>
+            <column header="EMAIL" name="EMAIL" type="STRING"/>
+            <column header="FIRST_NAME" name="FIRST_NAME" type="STRING"/>
+            <column header="LAST_NAME" name="LAST_NAME" type="STRING"/>
+            <column header="MIDDLE_NAME" name="MIDDLE_NAME" type="STRING"/>
+        </loadUpdateData>
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_CREATED_BY_EMPLOYEE_ID_IDX">
+            <column name="CREATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEE" indexName="EMPLOYEE_UPDATED_BY_EMPLOYEE_ID_IDX">
+            <column name="UPDATED_BY_EMPLOYEE_ID"/>
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="EMPLOYEE"
+                                 baseColumnNames="CREATED_BY_EMPLOYEE_ID"
+                                 constraintName="FK__EMPLOYEE__CREATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                                 referencedTableName="EMPLOYEE"
+                                 referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="EMPLOYEE"
+                                 baseColumnNames="CREATED_BY_EMPLOYEE_ID"
+                                 constraintName="FK__EMPLOYEE__UPDATED_BY_EMPLOYEE_ID__EMPLOYEE__ID"
+                                 referencedTableName="EMPLOYEE"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <changeSet id="LOAD DICTIONARIES" author="sm" runOnChange="true">
         <loadUpdateData tableName="DICTIONARY" primaryKey="ID" separator=";" file="db/changelog/latest/data/DICTIONARY.csv">
             <column header="ID" name="ID" type="NUMERIC"/>
             <column header="DICTIONARY_TYPE" name="DICTIONARY_TYPE" type="STRING"/>
             <column header="DICTIONARY_KEY" name="DICTIONARY_KEY" type="STRING"/>
             <column header="DICTIONARY_VALUE" name="DICTIONARY_VALUE" type="STRING"/>
+            <column header="DISPLAY_ORDER" name="DISPLAY_ORDER" type="INTEGER"/>
         </loadUpdateData>
     </changeSet>
 
-    <changeSet id="LOAD SCHEDULE ITEMS" author="sm">
-        <loadUpdateData tableName="SCHEDULE_ITEM" primaryKey="ID" separator=";" file="db/changelog/latest/data/SCHEDULE_ITEM.csv">
+    <changeSet id="LOAD ROLES" author="sm" runOnChange="true">
+        <loadUpdateData tableName="ROLES" primaryKey="ID" separator=";" file="db/changelog/latest/data/ROLES.csv">
             <column header="ID" name="ID" type="NUMERIC"/>
-            <column header="ROW" name="ROW" type="NUMERIC"/>
-            <column header="COL" name="COL" type="NUMERIC"/>
-            <column header="TIMES" name="TIMES" type="NUMERIC"/>
-            <column header="PROFESSOR" name="PROFESSOR" type="NUMERIC"/>
-            <column header="DISCIPLINE" name="DISCIPLINE" type="NUMERIC"/>
-            <column header="CLASSROOM" name="CLASSROOM" type="NUMERIC"/>
-            <column header="DISCIPLINE_TYPE" name="DISCIPLINE_TYPE" type="NUMERIC"/>
+            <column header="NAME" name="NAME" type="STRING"/>
         </loadUpdateData>
     </changeSet>
 
-    <changeSet id="LOAD PROFESSOR DISCIPLINES" author="sm">
-        <loadUpdateData tableName="PROFESSOR_DISCIPLINE_LNK" primaryKey="ID" separator=";" file="db/changelog/latest/data/PROFESSOR_DISCIPLINE.csv">
-            <column header="ID" name="ID" type="NUMERIC"/>
-            <column header="PROFESSOR" name="PROFESSOR" type="NUMERIC"/>
-            <column header="DISCIPLINE" name="DISCIPLINE" type="NUMERIC"/>
-        </loadUpdateData>
+    <changeSet id="LOAD ADMIN ROLES" author="sm">
+        <sql>
+            INSERT INTO EMPLOYEE_ROLES (id, employee_id, role_id)
+            SELECT nextval('EXT_HIBERNATE_SEQUENCE'), u.id, r.id
+            FROM employee u, roles r
+            WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN' ON CONFLICT DO NOTHING;
+        </sql>
     </changeSet>
 
 </databaseChangeLog>
